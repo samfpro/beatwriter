@@ -1,0 +1,96 @@
+/* styles.css */
+
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(16, 30px);
+  grid-template-rows: repeat(16, 30px);
+  gap: 2px;
+  margin: 5px auto;
+  max-width: 600px; /* Adjust the width as needed */
+}
+
+.grid-cell {
+  width: 30px;
+  height: 30px;
+  border: 1px solid #666;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}
+
+/* Color the columns */
+.grid-cell:nth-child(16n + 1),
+.grid-cell:nth-child(16n + 9) {
+  background-color: #354152; /* Darkest color for columns 1 and 9 */
+  color: #fff; /* Set text color to white for dark cells */
+}
+
+.grid-cell:nth-child(16n + 5),
+.grid-cell:nth-child(16n + 13) {
+  background-color: #53627c; /* Second darkest color for columns 5 and 13 */
+  color: #fff; /* Set text color to white for dark cells */
+}
+
+.grid-cell:nth-child(16n + 3),
+.grid-cell:nth-child(16n + 7),
+.grid-cell:nth-child(16n + 11),
+.grid-cell:nth-child(16n + 15) {
+  background-color: #8699b1; /* Lightest color for columns 3, 7, 11, and 15 */
+}
+
+.light-text {
+  color: #ccc;
+}
+
+.title-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px; /* Add some space between the title image and the grid */
+}
+
+.title-image {
+  max-width: 100%; /* Set the maximum width of the image to the width of its container */
+  height: auto; /* Allow the image to adjust its height to maintain aspect ratio */
+}
+
+.container {
+  position: relative; /* Set the container to relative positioning */
+}
+
+.grid-and-mode {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 10px; /* Add some space between the grid and the mode text */
+}
+
+.mode-text::before {
+  content: attr(data-mode); /* Use the data-mode attribute as the content */
+  font-size: 16px;
+  font-weight: bold;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.isCandidate{
+
+  background-color: #0056b3 !important;
+}
