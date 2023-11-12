@@ -1,14 +1,21 @@
 // cell.js
 
 class Cell {
-  constructor(uniqueId, syllable = '', isCandidate = false) {
+  constructor(uniqueId) {
     this.uniqueId = uniqueId;
-    this.syllable = syllable;
-    this.isCandidate = isCandidate;
+    this.syllable = '';
+    this.isCandidate = false;
+    this.stepPlaying = false;
+ 
   }
-
-  // Other methods for the Cell class can be added here, if needed.
+ static fromJSON(data) {
+    const cell = new Cell(data.uniqueId);
+    cell.syllable = data.syllable;
+    cell.isCandidate = data.isCandidate;
+    return cell;
+  }
 }
 
-// Export the Cell class (optional, since you mentioned no imports/exports)
-// module.exports = Cell;
+
+;
+console.log("cell.js loaded");

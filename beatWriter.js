@@ -1,75 +1,116 @@
-//-----project files---------//
-// -----------------beatWriter.js
-
 class Beatwriter {
   constructor() {
-    // Initialize any necessary properties here
-    this.cells = []; // Initialize the cells array here
-    for (let i = 0; i < 256; i++) {
-      // Initialize each cell as a Cell object
-      this.cells.push(new Cell(i));
-    }
-    this.gridView = new GridView(this); // Create an instance of the gridView class
-    this.mode = 'write'; // Set the initial mode to 'write'
-    this.currentCell = 0; // Set the initial current cell index to 0
-    this.curCelPlaceHolder = 0;
-    this.modeWrite = new ModeWrite(this); // Create an instance of modeWrite class
-    this.modeArrange = new ModeArrange(this); // Create an instance of modeArrange class
-    this.initializeEventListeners(); // Set up event listeners
-    this.gridView.updateGrid(); // Updated to show the initial grid
+    console.log('Initializing Beatwriter...');
+    this.cells = Array.from({
+      length: 256
+    }, (_, i) => new Cell(i));
+    this.gridView = new GridView(this);
+    this.mode = 'write';
+    this.currentCell = 0;
+    this.verseLength = 0;
+    this.currentBPM = 83;
+    this.curCellPlaceholder = 0;
+    this.verseName = "test";
+    console.log("creating modeWrite instance");
+    this.modeWrite = new ModeWrite(this);
+    console.log("creating modeArrange instance");
+    this.modeArrange = new ModeArrange(this);
+    console.log("creating modePlay instance");
+    this.modePlay = new ModePlay(this);
+    console.log("getting DOM elements");
+    this.fileManager = new FileManager(this);
+    this.modeButton = document.getElementById('mode-button');
+    this.lightModePlay = document.getElementById('light-mode-play');
+    this.lightModeWrite = document.getElementById('light-mode-write');
+    this.lightModeArrange = document.getElementById('light-mode-arrange');
+    this.bpmSlider = document.getElementById('bpm-slider');
+    this.speakingRateSlider = document.getElementById('speaking-rate-slider');
+    this.playButton = document.getElementById('play-button');
+    this.gridCells = document.querySelectorAll('.grid-cell');
+    this.saveButton = document.getElementById('save-button');
+    this.loadButton = document.getElementById('load-button');
+    this.importButton = document.getElementById('import-button');
+    this.initializeEventListeners();
+    this.updateModeDisplay();
+    this.gridView.updateGrid();
+
   }
 
-  // Other functions will go here...
+  // ... Rest of the constructor
 
   initializeEventListeners() {
-    // Add event listener for the mode toggle button
-    const toggleButton = document.getElementById('toggle-mode-button');
-    toggleButton.addEventListener('click', () => {
-      this.toggleMode();
+    console.log('Initializing event listeners...');
+    this.modeButton.addEventListener('click', () => this.toggleMode());
+    this.saveButton.addEventListener('click', () => this.fileManager.saveToFileWithMetadata(this.verseName, this.currentBPM, this.modePlay.beatTrackFileName, this.cells));
+    this.loadButton.addEventListener('click', () => this.fileManager.loadFileWithMetadata());
+    this.playButton.addEventListener('click', () => this.handlePlayButtonClick());
+    this.importButton.addEventListener('click', () => this.handleImportButtonClick());
+    this.bpmSlider.addEventListener('input', () => this.updateBPM(parseInt(this.bpmSlider.value)));
+    this.speakingRateSlider.addEventListener('input', () => {
+      const newSpeakingRate = parseFloat(this.speakingRateSlider.value);
+      this.modePlay.ttsSpeakingRate = newSpeakingRate;
+      document.getElementById('speaking-rate-value').textContent = newSpeakingRate.toFixed(1);
     });
 
-    this.gridView.gridContainer.addEventListener('click', (event) => {
-      if (this.mode === 'write') {
-        const cellElement = event.target;
-        const cellIndex = Array.from(cellElement.parentNode.children).indexOf(cellElement);
-        this.currentCell = cellIndex;
-        this.modeWrite.handleGridClickWriteMode(cellIndex);
-      } else if (this.mode === 'arrange') {
-        // Pass the event to modeArrange
-        this.modeArrange.handleGridClickArrangeMode(event);
-      }
-    });
-
-    // Add event listener for the keydown event
-    this.gridView.gridContainer.addEventListener('keydown', (event) => {
-      if (this.mode === 'write') {
-        this.modeWrite.handleKeyDown(event);
-      }
-    });
+    for (let i = 0; i < this.gridCells.length; i++) {
+      this.gridCells[i].addEventListener('click', (event) => this.handleGridClick(event));
+      this.gridCells[i].addEventListener('keydown', (event) => this.handleGridKeydown(event));
+    }
   }
 
-  // Function to switch between write and arrange modes
- toggleMode() {
-  this.mode = this.mode === 'write' ? 'arrange' : 'write';
-  const modeTextDiv = document.querySelector('.mode-text');
-  modeTextDiv.textContent = `Current Mode: ${this.mode.charAt(0).toUpperCase() + this.mode.slice(1)} Mode`;
 
-  if (this.mode === 'arrange') {
-    console.log("switching to arrange mode.");
-    this.curCelPlaceHolder = this.currentCell;
-    this.currentCell = 256;
-    console.log("done. currentCell set to " + this.currentCell);
-  } else if (this.mode === 'write') {
-    console.log("switching to write mode");
-    this.currentCell = this.curCelPlaceHolder;
-    this.modeArrange.resetCandidateCells(); // Fixed the reference to modeArrange
-    this.modeArrange.moveFromIndex = null; // Fixed the reference to modeArrange
-    this.modeArrange.moveToIndex = null; // Fixed the reference to modeArrange
-    console.log("done.");
+  toggleMode() {
+    if (this.mode === 'arrange') {
+      this.mode = 'write';
+    } else if (this.mode === 'write') {
+      this.mode = 'arrange';
+    }
+    this.updateModeDisplay();
+
+
   }
 
-  this.gridView.updateGrid(); // Move this line here to update the grid after the mode is toggled
-}
-}
+  updateModeDisplay() {
+    
+    const lightToTurnOff = document.querySelectorAll(".mode-active")[0];
+    lightToTurnOff.classList.remove('mode-active')
 
-this.beatwriter = new Beatwriter();
+    if (this.mode == 'write') {
+       this.lightModeWrite.classList.add('mode-active');
+    }else if (this.mode == 'arrange'){
+              this.lightModeArrange.classList.add('mode-active');
+    }else if (this.mode == 'play'){
+              this.lightModePlay.classList.add('mode-active');
+    }
+  }
+
+  handlePlayButtonClick() {
+    this.modePlay.start();
+  }
+
+  handleImportButtonClick() {
+    this.fileManager.importText();
+  }
+
+
+  handleGridClick(event) {
+    if (this.mode === 'arrange') {
+      this.modeArrange.handleGridClick(event);
+    } else if (this.mode === 'write') {
+      this.modeWrite.handleGridClick(event);
+    }
+  }
+  handleGridKeydown(event) {
+    if (this.mode === 'write') {
+      this.modeWrite.handleKeydown(event);
+    }
+  }
+
+  updateBPM(newBPM) {
+    this.currentBPM = newBPM;
+    this.bpmDisplayValue = newBPM;
+  }
+
+  // ... Rest of the methods
+}
+const beatwriter = new Beatwriter();

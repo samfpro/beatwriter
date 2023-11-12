@@ -5,7 +5,7 @@ class ModeArrange {
     this.moveToIndex = null;
   }
 
- handleGridClickArrangeMode(event) {
+  handleGridClick(event) {
     console.log("Attempting to handle arrange mode click");
     const cellElement = event.target;
     const cellIndex = Array.from(cellElement.parentNode.children).indexOf(cellElement);
@@ -16,14 +16,17 @@ class ModeArrange {
       this.highlightPossibleMoves(cellIndex);
       this.beatwriter.gridView.updateGrid();
     } else {
-      this.moveToIndex = cellIndex;
-      console.log("Set moveToIndex to ", this.moveToIndex);
-      this.performMove();
+      if (this.beatwriter.cells[cellIndex].isCandidate){
+          this.moveToIndex = cellIndex;
+          console.log("Set moveToIndex to ", this.moveToIndex);
+          this.performMove();
+      }
       this.resetCandidateCells();
       this.moveFromIndex = null;
       this.moveToIndex = null;
       this.beatwriter.gridView.updateGrid();
     }
+      
   }
 
 
@@ -83,63 +86,60 @@ class ModeArrange {
   }
 
 
-performMove() {
-  console.log("Performing move...");
+  performMove() {
+    console.log("Performing move...");
 
-  const moveDistance = this.moveToIndex - this.moveFromIndex;
-  const blanksToMove = Math.abs(moveDistance);
-  console.log("Move distance: " + moveDistance);
-  console.log("Blanks to move: " + blanksToMove);
+    const moveDistance = this.moveToIndex - this.moveFromIndex;
+    const blanksToMove = Math.abs(moveDistance);
+    console.log("Move distance: " + moveDistance);
+    console.log("Blanks to move: " + blanksToMove);
 
-  const cellsArray = this.beatwriter.cells;
-  const syllablesArray = cellsArray.map(cell => cell.syllable); // Create a separate array of just the syllables
+    const cellsArray = this.beatwriter.cells;
+    const syllablesArray = cellsArray.map(cell => cell.syllable); // Create a separate array of just the syllables
 
-  if (moveDistance > 0) {
-    // Moving to the right
-    let blanksRemoved = 0;
-    for (let i = this.moveFromIndex + 1; i < syllablesArray.length; i++) {
-      if (syllablesArray[i].trim() === '') {
-        syllablesArray.splice(i, 1);
-        blanksRemoved++;
-        i--;
+    if (moveDistance > 0) {
+      // Moving to the right
+      let blanksRemoved = 0;
+      for (let i = this.moveFromIndex + 1; i < syllablesArray.length; i++) {
+        if (syllablesArray[i].trim() === '') {
+          syllablesArray.splice(i, 1);
+          blanksRemoved++;
+          i--;
+        }
+        if (blanksRemoved === blanksToMove) break;
       }
-      if (blanksRemoved === blanksToMove) break;
-    }
-    syllablesArray.splice(this.moveToIndex - blanksRemoved, 0, ...Array(blanksToMove).fill(''));
-  } else if (moveDistance < 0) {
-    // Moving to the left
-    let blanksRemoved = 0;
-    for (let i = this.moveFromIndex - 1; i >= 0; i--) {
-      if (syllablesArray[i].trim() === '') {
-        syllablesArray.splice(i, 1);
-        blanksRemoved++;
-        i++;
+      syllablesArray.splice(this.moveToIndex - blanksRemoved, 0, ...Array(blanksToMove).fill(''));
+    } else if (moveDistance < 0) {
+      // Moving to the left
+      let blanksRemoved = 0;
+      for (let i = this.moveFromIndex - 1; i >= 0; i--) {
+        if (syllablesArray[i].trim() === '') {
+          syllablesArray.splice(i, 1);
+          blanksRemoved++;
+          i++;
+        }
+        if (blanksRemoved === blanksToMove) break;
       }
-      if (blanksRemoved === blanksToMove) break;
+      syllablesArray.splice(this.moveToIndex + 1, 0, ...Array(blanksToMove).fill(''));
     }
-    syllablesArray.splice(this.moveToIndex + 1, 0, ...Array(blanksToMove).fill(''));
+
+    // Update the syllables property in beatwriter.cells
+    cellsArray.forEach((cell, index) => {
+      cell.syllable = syllablesArray[index];
+    });
+
+    this.beatwriter.gridView.updateGrid();
   }
 
-  // Update the syllables property in beatwriter.cells
-  cellsArray.forEach((cell, index) => {
-    cell.syllable = syllablesArray[index];
-  });
-
-  this.beatwriter.gridView.updateGrid();
-}
 
 
 
 
-
-resetCandidateCells() {
-  for (const cell of this.beatwriter.cells) {
-    cell.isCandidate = false;
+  resetCandidateCells() {
+    for (const cell of this.beatwriter.cells) {
+      cell.isCandidate = false;
+    }
   }
 }
 
-
-
-
-
-}
+console.log("modeArrange.js loaded")

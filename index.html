@@ -1,35 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Beat Writer App</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Title Here</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Link to your existing stylesheet -->
 </head>
+
 <body>
-  <div class="title-container">
-    <img src="beatwriterTitle.jpeg" class="title-image" alt="Beatwriter Title">
-  </div>
 
-  <div class="container">
-    <div class="grid-and-mode">
-      <div id="grid-container" class="grid-container"></div>
-<div class="mode-text" data-mode="">Current Mode: </div>
-
-
+    <div id="title-container" class="container">
+        <div id="title"><img id="title-image" src="beatwriterTitle.jpeg"></div>
     </div>
-    <button id="toggle-mode-button">Toggle Mode</button>
-  </div>
 
-  <div class="play-container">
-    <img src="play_button.png" class="play_button" alt="Play Button">
-  </div>
+    <div id="grid-container" class="container">
+    </div>
 
-  <script src="getSyllables.js"></script>
-  <script src="cell.js"></script>
-  <script src="modeArrange.js"></script>
-  <script src="modeWrite.js"></script>
-  <script src="gridView.js"></script>
-  <script src="beatWriter.js"></script>
+    <div id='control-panel' class="container">
+
+        <button id="mode-button" class="button">MODE</button>
+        <div id="mode-container" class="sub-container">
+
+            <div class="mode-cell">
+                <div id="light-mode-write" class="light mode-active"></div>
+                <label class="label">WRITE</label>
+            </div>
+            <div class="mode-cell">
+                <div id="light-mode-arrange" class="light"></div>
+                <label class="label">ARRANGE</label>
+            </div>
+            <div class="mode-cell">
+                <div id="light-mode-play" class="light"></div>
+                <label class="label">PLAY</label>
+
+            </div>
+        </div>
+
+        <button id="play-button" class="button">PLAY</button>
+        <button id="save-button" class="button">SAVE</button>
+        <button id="load-button" class="button">LOAD</button>
+        <button id="import-button" class="button">IMPT</button>
+        <button id="export-button" class="button">EXPT</button>
+
+        <div class="lcd-container">
+            <div class="lcd-display-container">
+                <div id="bpm-lcd-display" class="lcd-display" tabindex="0" role="textbox" aria-readonly="true">120</div>
+                <label class="label">BPM</label>
+            </div>
+            <div class="lcd-button-container">
+                <button class="up-btn" id="up-btn">&#9650;</button>
+                <button class="down-btn" id="down-btn">&#9660;</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts moved to the body -->
+    <script src="cell.js"></script>
+    <script src="gridView.js"></script>
+    <script src="getSyllables.js"></script>
+    <script src="modeWrite.js"></script>
+    <script src="modeArrange.js"></script>
+    <script src="modePlay.js"></script>
+    <script src="fileManager.js"></script>
+    <script src="textToAudioBlob.js"></script>
+    <script src="beatWriter.js"></script>
+
 </body>
+
 </html>
