@@ -18,7 +18,7 @@ if (textToConvert === 'a'){
     },
     voice: {
       'languageCode': 'en-US',
-      'name': 'en-US-Standard-B',
+      'name': 'en-US-Studio-M',
       'ssmlGender': 'MALE'
     },
     audioConfig: {

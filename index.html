@@ -10,52 +10,100 @@
 
 <body>
 
-    <div id="title-container" class="container">
-        <div id="title"><img id="title-image" src="beatwriterTitle.jpeg"></div>
-    </div>
+    <div class="control-panel">
+        <div class="cp-section">
+            <div class="sub-container" id="title-container">
+                <label class="label">SAMFPRO</label>
 
-    <div id="grid-container" class="container">
-    </div>
-
-    <div id='control-panel' class="container">
-
-        <button id="mode-button" class="button">MODE</button>
-        <div id="mode-container" class="sub-container">
-
-            <div class="mode-cell">
-                <div id="light-mode-write" class="light mode-active"></div>
-                <label class="label">WRITE</label>
+                <div id="title">
+                    <b>BEATWRITER</b>
+                </div>
             </div>
-            <div class="mode-cell">
-                <div id="light-mode-arrange" class="light"></div>
-                <label class="label">ARRANGE</label>
+        </div>
+    </div>
+    <div class="control-panel">
+        <div class="cp-section" id="screen-section">
+            <div id="main-screen">
+                <div id="start-marker-container" class="marker-container">
+                </div>
+                <div id="grid-container">
+                </div>
+                <div id="end-marker-container" class="marker-container">
+                </div>
             </div>
-            <div class="mode-cell">
-                <div id="light-mode-play" class="light"></div>
-                <label class="label">PLAY</label>
+        </div>
+    </div>
+    <div class='control-panel'>
+        <div class="cp-section">
+            <button id="mode-button" class="button">MODE</button>
+            <div class="sub-container">
+
+                <div class="mode-cell">
+                    <div id="light-mode-write" class="light mode-active"></div>
+                    <label class="label">W</label>
+                </div>
+                <div class="mode-cell">
+                    <div id="light-mode-arrange" class="light"></div>
+                    <label class="label">A</label>
+                </div>
+                <div class="mode-cell">
+                    <div id="light-mode-play" class="light"></div>
+                    <label class="label">P</label>
+                </div>
+
 
             </div>
         </div>
 
-        <button id="play-button" class="button">PLAY</button>
-        <button id="save-button" class="button">SAVE</button>
-        <button id="load-button" class="button">LOAD</button>
-        <button id="import-button" class="button">IMPT</button>
-        <button id="export-button" class="button">EXPT</button>
+        <div class="cp-section">
+            <button id="play-button" class="button">PLAY</button>
+            <button id="save-button" class="button">SAVE</button>
+            <button id="load-button" class="button">LOAD</button>
+            <button id="import-button" class="button">IMPORT</button>
+            <button id="export-button" class="button">EXPORT</button>
 
-        <div class="lcd-container">
-            <div class="lcd-display-container">
-                <div id="bpm-lcd-display" class="lcd-display" tabindex="0" role="textbox" aria-readonly="true">120</div>
-                <label class="label">BPM</label>
+        </div>
+
+
+        <div class="cp-section">
+
+            <button id="lcd-button" class="button">VALUE</button>
+            <div class="sub-container">
+                <div class="mode-cell">
+                    <div id="light-lcd-bpm" class="light val-active"></div>
+                    <label class="label">B</label>
+                </div>
+                <div class="mode-cell">
+                    <div id="light-lcd-voc" class="light"></div>
+                    <label class="label">V</label>
+                </div>
+                <div class="mode-cell">
+                    <div id="light-lcd-rat" class="light"></div>
+                    <label class="label">R</label>
+
+                </div>
             </div>
-            <div class="lcd-button-container">
-                <button class="up-btn" id="up-btn">&#9650;</button>
-                <button class="down-btn" id="down-btn">&#9660;</button>
+
+            
+                <div id="lcd-display" class="lcd-display" tabindex="0" role="textbox" aria-readonly="true">120</div>
+            <div class="sub-container">
+                <button class="up-btn" id="lcd-up-btn">&#9650;</button>
+                <button class="down-btn" id="lcd-down-btn">&#9660;</button>
             </div>
         </div>
+        <div class="cp-section">
+            <div id="metronome-light"></div>
+            <div id="metronome-switch" class="on-off-switch-vert">
+                <div id="metronome-switch-up" class="on-off-switch-position on-off-switch-position-active"></div>
+                <div id="metronome-switch-down" class="on-off-switch-position"></div>
+
+            </div>
+        </div>
+
     </div>
 
     <!-- Scripts moved to the body -->
+    <script src="constants.js"></script>
     <script src="cell.js"></script>
     <script src="gridView.js"></script>
     <script src="getSyllables.js"></script>
@@ -64,7 +112,9 @@
     <script src="modePlay.js"></script>
     <script src="fileManager.js"></script>
     <script src="textToAudioBlob.js"></script>
+    <script src="valueController.js"></script>
     <script src="beatWriter.js"></script>
+
 
 </body>
 

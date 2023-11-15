@@ -1,201 +1,405 @@
 /* styles.css */
 
-/* styles.css */
-
 body {
-  font-family: 'Arial', sans-serif;
-  text-align: center;
-  background-color: #000;
-  color: #fff;
-  margin: 0;
-  padding: 0;
+    font-family: 'Arial', sans-serif;
+    text-align: center;
+    background-color: #000;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+}
+
+.control-panel {
+
+    gap: 3px;
+    padding: 3px;
+    width: 580px;
+    background-color: #333333;
+    display: flex;
+    flex-direction: row;
+
+}
+
+.cp-section {
+
+    box-shadow: -3px 3px 1px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: row;
+    gap: 3px;
+    border-radius: 3px;
+    border-style: solid;
+    border-left-width: 0px;
+    border-bottom-width: 0px;
+    border-top-width: 1px;
+    border-right-width: 1px;
+    padding: 3px;
+    border-color: #6C8EBF;
+    background: linear-gradient(to bottom, #d3d3d3, #808080);
+    align-items: center;
+}
+
+#title {
+    display: block;
+    font-size: 24px;
+    text-shadow: 2px -2px 1px black;
+    color: #6C8EBF;
+}
+#title container{
+   align-content:left !important;
 }
 
 #grid-container {
-  display: grid;
-  grid-template-columns: repeat(16, 30px);
-  grid-template-rows: repeat(16, 20px);
-  width: 500px; /* Adjust the width as needed */
-  background-color: #222;
-  border-radius: 5px;
-  padding: 10px;
-  box-shadow: -3px 3px 1px rgba(0, 0, 0, 0.5);
-  gap: 1px; 
-  position: relative;
+    display: grid;
+    grid-template-columns: repeat(16, 30px);
+    grid-template-rows: repeat(16, 20px);
+    width: 496px;
+    padding: 10px;
+    gap: 1px;
+    position: relative;
 }
 
-#grid-container:before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0) 80%);
-  opacity: 0.5;
-  z-index: 1;
+#screen-section {
+    align-content: center;
+    align-items: center;
 }
 
-.button:before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0) 80%);
-  opacity: 0.5;
+#main-screen {
+    padding: 3px;
+    display: flex;
+    flex-direction: row;
+    background-image: url('background.jpeg');
+    background-size: cover;
+    justify-content: space-evenly;
+    align-items: center;
+    border-style: solid;
+    border-width: 2px;
+    border-top-color: black;
+    border-bottom-color: white;
+    border-left-color: white;
+    border-right-color: black;
+}
+
+.marker-container {
+    width: 25px;
+    display: grid;
+    grid-template-rows: repeat(16, 20px);
+    gap: 1px;
+    padding: 0px;
+}
+
+.start-marker {
+    width: 25px;
+    height: 20px;
+    border-style: solid;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 0px;
+    border-right-width: 0px;
+    border-color: #ADD8E6;
+}
+
+.start-marker-active {
+    background-color: #A0522D;
+}
+
+.start-marker-active::before {
+    content: "\2192";
+    color: white;
+    display: inline-block;
+    font-size: 16px;
+}
+
+.end-marker {
+    width: 25px;
+    height: 20px;
+    border-style: solid;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 0px;
+    border-right-width: 0px;
+    border-color: #ADD8E6;
+}
+
+.end-marker-active {
+    background-color: #A0522D;
+}
+
+.end-marker-active::before {
+    content: "\2190";
+    color: white;
+    display: inline-block;
+    font-size: 16px;
 }
 
 .grid-cell {
-  width: 30px;
-  height: 20px;
-  border: 1px;
-  border-top-width: 1px;
-  border-color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
+    width: 30px;
+    height: 20px;
+    border-style: solid;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 0px;
+    border-right-width: 0px;
+    border-color: #ADD8E6;
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    position: relative;
+    /* Ensure a positioning context for ::before */
 }
 
-.mode-active {
-
-  background-color: green !important;
+.grid-cell::before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    border-color: black;
+    border-style: solid;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 0px;
+    border-right-width: 0px;
+    /* Adjust alpha for transparency */
+    z-index: 1;
+    /* Ensure it's above the content in the grid cell */
 }
 
+.grid-cell.playable::before {
+    background-color: transparent;
+    /* Set background color to transparent for playable cells */
+}
+
+/* Dark greyish blue for columns 1 and 9 */
 .grid-cell:nth-child(16n + 1),
 .grid-cell:nth-child(16n + 9) {
-  background-color: #354152; /* Darkest color for columns 1 and 9 */
-  color: #fff; /* Set text color to white for dark cells */
+    background-color: rgba(47, 79, 79, 0.7);
+    color: #fff;
 }
 
+/* Medium greyish blue for columns 5 and 13 */
 .grid-cell:nth-child(16n + 5),
 .grid-cell:nth-child(16n + 13) {
-  background-color: #53627c; /* Second darkest color for columns 5 and 13 */
-  color: #fff; /* Set text color to white for dark cells */
+    background-color: rgba(70, 130, 180, 0.7);
+    color: #fff;
 }
 
-.grid-cell:nth-child(16n + 3),
-.grid-cell:nth-child(16n + 7),
-.grid-cell:nth-child(16n + 11),
-.grid-cell:nth-child(16n + 15) {
-  background-color: #8699b1; /* Lightest color for columns 3, 7, 11, and 15 */
+/* Light greyish blue for other odd columns */
+.grid-cell:nth-child(16n +3),
+.grid-cell:nth-child(16n +7),
+.grid-cell:nth-child(16n +11),
+.grid-cell:nth-child(16n +15) {
+    background-color: rgba(173, 216, 230, 0.7);
+    color: #000;
+    /* Adjust text color accordingly */
 }
 
-/* ... (rest of the CSS styles) ... */
-
-/* ... (column coloring styles) ... */
-
-.label{
-   font-size: 10px;
-
-}
-.light{
-   width: 8px;
-   height: 8px;
-   background-color: #00563F;
-   border-radius: 50%;
+.stepPlaying {
+    background-color: rgba(184, 134, 11, 0.7) !important;
 }
 
-#title-container {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 20px; /* Add some space between the title image and the grid */
+
+/* Add more styles as needed */
+
+.label {
+    font-size: 10px;
+    text-shadow: 1px -1px 1px black;
+    text-align: left;
 }
+
+.light {
+    width: 8px;
+    height: 8px;
+    background-color: #003300;
+    border-radius: 50%;
+    box-shadow: -3px 3px 1px black;
+    border-style: solid;
+    border-right-width: 1px;
+    border-top-width: 1px;
+    border-bottom-width: 0px;
+    border-left-width: 0px;
+    border-color: white;
+}
+
+/* Add more styles as needed */
+
 
 #title-image {
-  width: 250px;
-  height: auto;
+    width: 250px;
+
 }
 
-.container {
-  position: relative;
-  display: flex;
-  background-color: #222;
-  width: 500px;
-  gap: 3px;
-  box-shadow: -3px 3px 1px rgba(0, 0, 0, 0.5);
-padding: 3px;
-}
-  
-.sub-container{
-   layout:grid;
+/* Add more styles as needed */
+
+
+.sub-container {
+    display: inline-block;
+    align-items: left;
+    
 }
 
-#mode-container{
-   grid-template-columns: repeat(3, 30px);
-   gap: 1px;
+
+.mode-active {
+    background-color: green;
+
 }
-.mode-cell{
-   display:flex;
+
+.val-active {
+    background-color: green;
 }
+
+.mode-cell {
+    display:flex;
+    flex-direction: row;
+}
+
+/* Add more styles as needed */
+
 .button {
-  width: 50px;
-  font-size: 12px;
-  background-color: #444;
-  color: #fff;
-  border: none;
-  cursor: pointer;
-  position: relative;
-  box-shadow: -3px 3px 1px black;
-  text-shadow: +1px -1px 0px black;
-  text-align: center;
-  border-radius: 3px;
+    width: 50px;
+    height: 40px;
+    line-height: 35px;
+    font-size: 12px;
+    background-color: #444;
+    color: #fff;
+    cursor: pointer;
+    box-shadow: -2px 2px 1px black;
+    text-shadow: +1px -1px 0px black;
+    border-style: solid;
+    border-left-width: 0px;
+    border-bottom-width: 0px;
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-color: #6C8EBF;
+    text-align: center;
+
+    border-radius: 3px;
+    background: linear-gradient(to bottom, black, #6C8EBF);
+    padding: 1px;
 }
 
 .button:hover {
-  background-color: #666;
+    background-color: #666;
 }
 
-.stepPlaying{
-  background-color: #666 !important;
-  font-size: 14px !important;
-}
-
-.isCandidate {
-  background-color: #666 !important;
-}
+/* Add more styles as needed */
 
 #bpm-slider {
-  width: 80%;
+    width: 80%;
 }
 
-.lcd-container{
-  text-align: center;
-  display: flex;
-  box-shadow: -3px 3px 1px black;
-  gap: 3px;
-  border-radius: 3px;
-}
+/* Add more styles as needed */
 
-.lcd-display-container{
-  display: flex;
-  flex-direction: column;
+.lcd-display-container {
+    display: flex;
+    flex-direction: column;
+    padding: 3px;
 }
 
 .lcd-display {
-  font-family: 'Digital-7', sans-serif; /* Use a digital font for the LCD screen effect */
-  border: none;
-  background-color: #D3D3D3;
-  width: 50px;
-  cursor: pointer;
-  font-size: 24px;
-  color: #789F8A;
-  box-shadow: 3px -3px 1px black;
-  padding: 3px;
+    font-family: 'Digital-7', sans-serif;
+    border: none;
+    background-color: black;
+    width: 50px;
+    cursor: pointer;
+    font-size: 30px;
+    color: #789F8A;
+    padding: 0px;
+    border-style: solid;
+    border-left-width: 1px;
+    border-bottom-width: 1px;
+    border-top-width: 0px;
+    border-right-width: 0px;
+    border-color: #ADD8E6;
 }
 
+/* Add more styles as needed */
+
 .lcd-button-container {
-  display: flex;
-  flex-direction: column;
+    display: flex;
+    flex-direction: column;
 }
 
 .up-btn,
 .down-btn {
-  font-size: 12px;
-  cursor: pointer;
-  height: 18px;
-  width: 18px;
-  border-radius: 0px;
+    font-size: 12px;
+    cursor: pointer;
+    height: 20px;
+    width: 20px;
+    border-radius: 3px;
+    color: white;
+    background: linear-gradient(to bottom, black, #6C8EBF);
+    padding: 3px;
+    border-left-width: 0px;
+    border-bottom-width: 0px;
+    border-top-width: 1px;
+    border-right-width: 1px;
+    box-shadow: -2px 2px 1px black;
+    text-shadow: +1px -1px 0px black;
+    border-color: #6C8EBF;
+}
+
+#values-button {
+    width: 30px !important;
+}
+
+.on-off-switch-vert {
+    display: flex;
+    flex-direction: column;
+    width: 20px;
+    height: 35px;
+    border-style: solid;
+    border-width: 1px;
+    gap: 3px;
+    border-left-color: #6C8EBF;
+    border-bottom-color: #6C8EBF;
+    border-right-color: black;
+    border-top-color: black;
+    border-radius: 3px;
+    background-color: black;
+
+
+}
+
+.on-off-switch-position {
+    height: 18px;
+    width: 18px;
+    border: none;
+    border-radius: 3px;
+
+
+
+}
+
+.on-off-switch-position-active {
+    background: linear-gradient(to bottom, black, #6C8EBF);
+    border-style: solid !important;
+    border-width: 1px;
+
+    border-top-color: #6C8EBF;
+    border-right-color: #6C8EBF;
+    border-left-color: black;
+    border-bottom-color: black;
+
+}
+
+#metronome-light {
+    background-image: url('metronomeLightOn.png');
+    margin-right: 5px;
+    width: 20px;
+    height: 25px;
+    background-size: contain;
+
+}
+
+.metronome-light-off {
+    background-image: url('metronomeLightOff.png') !important;
+    margin-right: 5px;
+    width: 20px;
+    height: 25px;
+    background-size: contain;
+
+
 }

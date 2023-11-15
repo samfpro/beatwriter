@@ -6,6 +6,7 @@ class Cell {
     this.syllable = '';
     this.isCandidate = false;
     this.stepPlaying = false;
+    this.isPlayable = false;
  
   }
  static fromJSON(data) {
