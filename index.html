@@ -3,105 +3,97 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Title Here</title>
+    <title>SAMFPRO BEATWRITER</title>
     <link rel="stylesheet" href="styles.css"> <!-- Link to your existing stylesheet -->
 </head>
 
 <body>
+    <div id="beatwriter-container">
+        <div class="control-panel" id="top-panel">
+            <div class="cp-section" id="title-container">
+                <div class="label" id="sub-title">SAMFPRO</div>
+                <div id="title">BEATWRITER </div>
+            </div>
+            <div class="cp-section" id="file-manager-container">
+                <div class="label" id="verse-name-label">VERSE NAME: </div>
+                <input type="text" placeholder="Untitled" id="verse-name-input">
+                <button id="save-button" class="button button-size-S">SAVE</button>
+                <button id="load-button" class="button button-size-S">LOAD</button>
+                <button id="import-button" class="button button-size-S">IMPT</button>
+                <button id="export-button" class="button button-size-S">EXPT</button>
 
-    <div class="control-panel">
-        <div class="cp-section">
-            <div class="sub-container" id="title-container">
-                <label class="label">SAMFPRO</label>
-
-                <div id="title">
-                    <b>BEATWRITER</b>
-                </div>
+            </div>
+            <div class="cp-section" id="beat-track-container">
+                <div class="label" id="beat-track-label">BEAT TRACK</div>
+                <div id="beat-track-tape-deck">LOAD A TRACK</div>
+                <button id="load-beat-track-button" class="button">LOAD</button>
             </div>
         </div>
-    </div>
-    <div class="control-panel">
-        <div class="cp-section" id="screen-section">
+        <div class="control-panel" id="middle-panel">
             <div id="main-screen">
-                <div id="start-marker-container" class="marker-container">
-                </div>
-                <div id="grid-container">
-                </div>
-                <div id="end-marker-container" class="marker-container">
-                </div>
+                <div id="start-marker-label-container"></div>
+                <div id="start-marker-container"> </div>
+                <div id="grid-container"> </div>
+                <div id="end-marker-container"> </div>
             </div>
         </div>
-    </div>
-    <div class='control-panel'>
-        <div class="cp-section">
-            <button id="mode-button" class="button">MODE</button>
-            <div class="sub-container">
-
-                <div class="mode-cell">
-                    <div id="light-mode-write" class="light mode-active"></div>
-                    <label class="label">W</label>
-                </div>
-                <div class="mode-cell">
-                    <div id="light-mode-arrange" class="light"></div>
-                    <label class="label">A</label>
-                </div>
-                <div class="mode-cell">
-                    <div id="light-mode-play" class="light"></div>
-                    <label class="label">P</label>
-                </div>
-
-
+        <div class='control-panel' id="bottom-panel">
+            <div class="cp-section" id="mode-container">
+                <button id="mode-button" class="button button-size-L">MODE</button>
+                <div id="light-mode-write" class="light mode-active"></div>
+                <div class="label">W</div>
+                <div id="light-mode-arrange" class="light"></div>
+                <div class="label">A</div>
+                <div id="light-mode-play" class="light"></div>
+                <div class="label">P</div>
             </div>
-        </div>
-
-        <div class="cp-section">
-            <button id="play-button" class="button">PLAY</button>
-            <button id="save-button" class="button">SAVE</button>
-            <button id="load-button" class="button">LOAD</button>
-            <button id="import-button" class="button">IMPORT</button>
-            <button id="export-button" class="button">EXPORT</button>
-
-        </div>
-
-
-        <div class="cp-section">
-
-            <button id="lcd-button" class="button">VALUE</button>
-            <div class="sub-container">
-                <div class="mode-cell">
-                    <div id="light-lcd-bpm" class="light val-active"></div>
-                    <label class="label">B</label>
-                </div>
-                <div class="mode-cell">
-                    <div id="light-lcd-voc" class="light"></div>
-                    <label class="label">V</label>
-                </div>
-                <div class="mode-cell">
-                    <div id="light-lcd-rat" class="light"></div>
-                    <label class="label">R</label>
-
-                </div>
+            <div class="cp-section" id="transport-container">
+                <button id="play-button" class="button button-size-L">PLAY</button>
             </div>
+            <div class="cp-section" id="lcd-container">
+                <button id="lcd-button" class="button button-size-L">VAL</button>
 
-            
+                <div id="lcd-light-b" class="light val-active"></div>
+                <div class="label">B</div>
                 <div id="lcd-display" class="lcd-display" tabindex="0" role="textbox" aria-readonly="true">120</div>
-            <div class="sub-container">
-                <button class="up-btn" id="lcd-up-btn">&#9650;</button>
-                <button class="down-btn" id="lcd-down-btn">&#9660;</button>
+                <button class="button lcd-up-down-btn button-size-XS" id="lcd-up-btn">&#9650;</button>
+
+
+                <div id="lcd-light-v" class="light"> </div>
+                <div class="label">V</div>
+
+                <div id="lcd-light-r" class="light"></div>
+                <div class="label">R</div>
+                <button class="button lcd-up-down-btn button-size-XS" id="lcd-down-btn">&#9660;</button>
             </div>
-        </div>
-        <div class="cp-section">
-            <div id="metronome-light"></div>
-            <div id="metronome-switch" class="on-off-switch-vert">
-                <div id="metronome-switch-up" class="on-off-switch-position on-off-switch-position-active"></div>
-                <div id="metronome-switch-down" class="on-off-switch-position"></div>
+            <div class="cp-section" id="metronome-container">
+                <div id="metronome-light"></div>
+                <div id="metronome-switch">
+                    <div id="metronome-switch-up" class="metronome-switch-position metronome-switch-position-active"></div>
+                    <div id="metronome-switch-down" class="metronome-switch-position"></div>
+                </div>
+            </div>
+            <div class="cp-section" id="mixer-container">
+                <div class="fader-container">
+                    <div class="fader-label">BEATTRACK</div>
+                    <input type="range" min="0" max="100" value="75" class="fader" id="beat-track-fader">
+                </div>
+                <div class="fader-container">
+                    <div class="fader-label">METRONOME</div>
+                    <input type="range" min="0" max="100" value="75" class="fader" id="metronome-fader">
+                </div>
+                <div class="fader-container">
+                    <div class="fader-label">TTSVOICE</div>
+                    <input type="range" min="0" max="100" value="75" class="fader" id="tts-fader">
+                </div>
+                <div class="fader-container">
+                    <div class="fader-label">MASTER</div>
+                    <input type="range" min="0" max="100" value="75" class="fader"  id="master-fader">
+                </div>
 
             </div>
         </div>
-
     </div>
-
     <!-- Scripts moved to the body -->
     <script src="constants.js"></script>
     <script src="cell.js"></script>
@@ -112,6 +104,7 @@
     <script src="modePlay.js"></script>
     <script src="fileManager.js"></script>
     <script src="textToAudioBlob.js"></script>
+    <script src="controlPanel.js"></script>
     <script src="valueController.js"></script>
     <script src="beatWriter.js"></script>
 

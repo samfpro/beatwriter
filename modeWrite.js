@@ -4,13 +4,13 @@ class ModeWrite {
 
   }
 
-  handleGridClick(event) {
-    console.log("cell index: " + event.target.dataset.cellIndex);
+  handleGridClick(cellIndex) {
+
 
     if ('' != this.beatwriter.gridView.getWord()) {
       this.processWord();
     }
-    this.beatwriter.currentCell = event.target.dataset.cellIndex;
+    this.beatwriter.currentCell = cellIndex;
 
 
     console.log("setting current cell to " + this.beatwriter.currentCell);
@@ -18,16 +18,29 @@ class ModeWrite {
     this.selectTextIfPresent();
   }
 
-  handleKeydown(event) {
-    if (event.key === ' ' || event.key === 'Enter') {
-      this.processWord();
-      if (event.key === 'Enter') {
-        const nextRow = Math.floor((this.beatwriter.currentCell - 1) / 16) + 1;
-        this.beatwriter.currentCell = nextRow * 16;
+  handleGridKeydown(key) {
+    if (key == 'Backspace' && this.beatwriter.gridView.getWord() == '') {
+      this.beatwriter.currentCell--;
+      this.beatwriter.cells[this.beatwriter.currentCell].syllable = '';
+      this.beatwriter.gridView.updateGrid();
+      return;
+
+    } else if (key === ' ' || key === 'Enter') {
+      if (this.beatwriter.gridView.getWord() == '') {
+        this.beatwriter.currentCell++;
+        if (key == 'Enter') {
+          this.moveToNextRow();
+        }
+      } else {
+        this.processWord();
+        if (key === 'Enter') {
+          this.moveToNextRow();
+        }
       }
       this.beatwriter.gridView.updateGrid();
       this.selectTextIfPresent();
     }
+
   }
 
   processWord() {
@@ -46,5 +59,11 @@ class ModeWrite {
       this.beatwriter.gridView.setTextSelected(this.beatwriter.currentCell);
     }
   }
+  moveToNextRow() {
+    const nextRow = Math.floor((this.beatwriter.currentCell - 1) / 16) + 1;
+    this.beatwriter.currentCell = nextRow * 16;
+  }
+
+
 }
 console.log("modeWrite.js loaded.");

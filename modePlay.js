@@ -1,180 +1,177 @@
 class ModePlay {
   constructor(beatwriter) {
-    console.log('Initializing ModePlay...');
     this.beatwriter = beatwriter;
-    this.scheduledEvents = [];
-    this.playbackDuration = 0;
+    this.ac = new AudioContext();
     this.ttsSpeakingRate = 3;
-    this.ttsSpeakingVoice = 2;
-    this.lastSyllableIndex = 0;
-    this.audioContext = new(window.AudioContext || window.webkitAudioContext)();
-    console.log(this.audioContext.state);
-    this.audioGraphBuilt = false;
+    this.ttsSpeakingVoice = 1;
+
+    this.beatTrackName = "Turtletuck_83BPM.wav";
+    this.playbackDuration = 0;
+    this.stepDuration = 0;
+    this.resumeAudioContext();
+    this.sineNodes = Array.from({
+      length: 256
+    }, () => null);
+    this.sawNodes = Array.from({
+      length: 256
+    }, () => null);
+    this.ttsNodes = Array.from({
+      length: 256
+    }, () => null);
+    this.beatTrackBuffer = null;
+    this.ttsCache = new Map();
+    this.metronomeTickDuration = 0.05; // Just enough for that tick sound.
     this.sineGain = null;
     this.sawGain = null;
     this.ttsGain = null;
     this.beatTrackGain = null;
-    this.sineOsc = null;
-    this.sawOsc = null;
-    this.clickDuration = 0.01;
-    this.sineNoteInterval = 4;
-    this.sawNoteInterval = 8;
-    this.beatTrackFileName = 'Turtletuck_83BPM.wav';
-    this.ttsCache = new Map();
-    console.log('ModePlay initialized.');
-    this.stepInterval = 0;
+    this.masterGain = null;
+    this.buildAudioGraph();
+    console.log("modePlayReady");
   }
 
-  createOscillator(oscType, frequency) {
-    console.log(`Creating ${oscType} oscillator with frequency ${frequency}...`);
-    try {
-      const oscillator = this.audioContext.createOscillator();
-      oscillator.type = oscType;
-      oscillator.frequency.setValueAtTime(frequency, this.audioContext.currentTime);
-      return oscillator;
-    } catch (error) {
-      console.error('Error in createOscillator:', error);
-    }
+  start() {
+    this.resumeAudioContext();
+    this.schedulePlayback();
   }
 
   resumeAudioContext() {
-    if (this.audioContext.state === 'suspended') {
-      this.audioContext.resume().then(() => {
-        console.log('AudioContext resumed successfully.');
-      }).catch((err) => {
-        console.error('Failed to resume AudioContext:', err);
-      });
-    }
-    if (!this.audioGraphBuilt) {
-      this.sineGain = this.createGainNode();
-      this.sawGain = this.createGainNode();
-      this.ttsGain = this.createGainNode();
-      this.beatTrackGain = this.createGainNode();
-      this.sineGain.connect(this.audioContext.destination);
-      this.sawGain.connect(this.audioContext.destination);
-      this.ttsGain.connect(this.audioContext.destination);
-      this.beatTrackGain.connect(this.audioContext.destination);
-      this.sineGain.gain.setValueAtTime(0, this.audioContext.currentTime);
-      this.sawGain.gain.setValueAtTime(0, this.audioContext.currentTime);
-      this.ttsGain.gain.setValueAtTime(1, this.audioContext.currentTime);
-      this.beatTrackGain.gain.setValueAtTime(0.5, this.audioContext.currentTime);
-      this.audioGraphBuilt = true;
+    if (this.ac.state === "suspended") {
+      this.ac.resume();
+      console.log("AudioContext resumed.");
     }
   }
 
+  buildAudioGraph() {
+    this.sineGain = this.ac.createGain();
+    this.sawGain = this.ac.createGain();
+    this.ttsGain = this.ac.createGain();
+    this.beatTrackGain = this.ac.createGain();
+    this.masterGain = this.ac.createGain();
 
-  createGainNode() {
-    const gainNode = this.audioContext.createGain();
-    gainNode.connect(this.audioContext.destination);
-    return gainNode;
-  }
+    this.sineGain.connect(this.masterGain);
+    this.sawGain.connect(this.masterGain);
+    this.ttsGain.connect(this.masterGain);
+    this.beatTrackGain.connect(this.masterGain);
 
-  schedulePlayback() {
-    console.log('Scheduling playback...');
-    const cellsArray = this.beatwriter.cells;
-    this.stepInterval = (60 / this.beatwriter.currentBPM) / 4;
-    const startTime = this.audioContext.currentTime + (this.stepInterval * 8);
-    this.clickDuration = this.stepInterval / 8;
-    this.playbackDurationInTicks = this.beatwriter.endMarkerPosition - this.beatwriter.startMarkerPosition;
-    this.playbackDuration = (this.playbackDurationInTicks * this.stepInterval) + (this.stepInterval * 8);
-    let firstRun = true;
-    for (let step = this.beatwriter.startMarkerPosition; step < this.beatwriter.endMarkerPosition; step++) {
-      const time = startTime + ((step - this.beatwriter.startMarkerPosition) * this.stepInterval);
+this.masterGain.connect(this.ac.destination);
+    this.sineGain.gain.setValueAtTime(0.5, this.ac.currentTime);
+    this.sawGain.gain.setValueAtTime(0.5, this.ac.currentTime);
+    this.ttsGain.gain.setValueAtTime(1, this.ac.currentTime);
+    this.beatTrackGain.gain.setValueAtTime(0.5, this.ac.currentTime);
 
-      if (firstRun) {
-        this.scheduleBeatTrack(time);
-        this.scheduleOscillators(time);
-        firstRun = false;
-      }
+this.masterGain.gain.setValueAtTime(1, this.ac.currentTime);
 
-      if ((step + 4) % this.sineNoteInterval === 0) {
-        this.scheduleGain(this.sineGain, 0.75, 0, time, this.clickDuration);
-      }
-
-      if ((step + 4) % this.sawNoteInterval === 0) {
-        this.scheduleGain(this.sawGain, 0.75, 0, time, this.clickDuration);
-      }
-
-      if (cellsArray[step].syllable) {
-        this.scheduleTts(time, cellsArray[step].syllable, this.ttsSpeakingRate);
-      }
-
-      console.log('Scheduled Time:', time * 1000);
-      console.log('Current Time:', this.audioContext.currentTime * 1000);
-
-      const calculatedTimeout = (time * 1000) - this.audioContext.currentTime * 1000;
-      console.log('Calculated Timeout:', calculatedTimeout);
-
-      (() => {
-        setTimeout(() => this.showBeatCursor(step), (time * 1000) - this.audioContext.currentTime * 1000);
-      })();
-    }
-
-
-
-    setTimeout(() => {
-
-      this.stopSequencer();
-      console.log('Sequencer stopped.');
-    }, this.playbackDuration * 1000);
-    console.log('Playback scheduled.');
-  }
-
-scheduleBeatTrack(time) {
-  console.log('Scheduling beat track...');
-  const audioFile = this.beatTrackFileName;
-
-  fetch(audioFile)
-    .then(response => response.arrayBuffer())
-    .then(data => this.audioContext.decodeAudioData(data))
-    .then(buffer => {
-      const beatTrackSource = this.audioContext.createBufferSource();
-      beatTrackSource.buffer = buffer;
-      beatTrackSource.connect(this.beatTrackGain);
-
-const trackOffset = this.beatwriter.startMarkerPosition * this.stepInterval;
-beatTrackSource.start(time, trackOffset);
-      beatTrackSource.stop(time + this.playbackDuration);
-    })
-    .catch(error => console.error('Error loading audio file:', error));
-  console.log('Beat track scheduled.');
 }
 
-  scheduleOscillators(time) {
-    this.sineOsc = this.createOscillator("sine", 430);
-    this.sawOsc = this.createOscillator("sawtooth", 430);
-    this.sineOsc.connect(this.sineGain);
-    this.sawOsc.connect(this.sawGain);
-    this.sineOsc.start(time);
-    this.sawOsc.start(time);
-    this.sineOsc.stop(time + this.playbackDuration);
-    this.sawOsc.stop(time + this.playbackDuration);
+  schedulePlayback() {
+  const stepsToPlay = this.beatwriter.endMarkerPosition - this.beatwriter.startMarkerPosition;
+  this.stepDuration = 60 / (this.beatwriter.currentBPM * 4);
 
+  this.playbackDuration = stepsToPlay * this.stepDuration;
+  const startTime = this.ac.currentTime + (8 * this.stepDuration);
+  const beatTrackOffset = this.beatwriter.startMarkerPosition * this.stepDuration;
 
+  this.scheduleBeatTrack(startTime, beatTrackOffset);  // Schedule beat track first
+
+  for (let step = this.beatwriter.startMarkerPosition; step < this.beatwriter.endMarkerPosition; step++) {
+    const time = startTime + (step - this.beatwriter.startMarkerPosition) * this.stepDuration;
+
+    if (this.beatwriter.metronomeOn) {
+      if ((step + 2) % 2 === 0) {
+        this.scheduleOsc(this.sineNodes[step], "sine", this.sineGain, time);
+      }
+
+      if ((step + 4) % 8 === 0) {
+        this.scheduleOsc(this.sawNodes[step], "saw", this.sawGain, time);
+      }
+    }
+
+    if (this.beatwriter.cells[step].syllable !== "") {
+      this.scheduleTts(time, this.beatwriter.cells[step].syllable);
+    }
+
+    this.showCursor(step, time);
+  }
+}
+
+  scheduleOsc(node, type, gainNode, time) {
+    node = this.ac.createOscillator();
+    node.type = type;
+    node.frequency.setValueAtTime(335, this.ac.currentTime);
+
+    node.connect(gainNode);
+
+    node.start(time);
+    node.stop(time + this.metronomeTickDuration);
+
+    console.log(`Scheduled ${type} oscillator at ${time}s.`);
   }
 
-  async scheduleTts(time, textToConvert, ttsSpeakingRate) {
-    console.log(`Scheduling TTS for "${textToConvert}"...`);
+
+async scheduleBeatTrack(time, offset) {
+  try {
+    const beatTrackNode = this.ac.createBufferSource();
+
+    if (this.beatTrackBuffer === null) {
+      console.log("Loading the beatTrack...");
+
+      // Check if the buffer already exists before making the XML request
+      const xhr = new XMLHttpRequest();
+      xhr.open("GET", this.beatTrackName, true);
+      xhr.responseType = "arraybuffer";
+
+      xhr.onload = async () => {
+        const data = xhr.response;
+        this.beatTrackBuffer = await this.ac.decodeAudioData(data);
+
+        beatTrackNode.buffer = this.beatTrackBuffer;
+        beatTrackNode.connect(this.beatTrackGain);
+        beatTrackNode.start(time, offset);
+        beatTrackNode.stop(time + this.playbackDuration);
+        console.log(`Scheduled beat track starting at ${time}s with offset ${offset}s.`);
+      };
+
+      xhr.onerror = (error) => {
+        console.error('Error loading beat track:', error);
+      };
+
+      xhr.send();
+    } else {
+      // Use the existing buffer without making the request
+      beatTrackNode.buffer = this.beatTrackBuffer;
+      beatTrackNode.connect(this.beatTrackGain);
+      beatTrackNode.start(time, offset);
+      beatTrackNode.stop(time + this.playbackDuration);
+      console.log(`Scheduled beat track starting at ${time}s with offset ${offset}s using existing buffer.`);
+    }
+  } catch (error) {
+    console.error('Error loading beat track:', error);
+  }
+}
+
+  async scheduleTts(time, textToConvert) {
+    console.log(`Scheduling TTS for "${textToConvert}" at ${time}s...`);
     try {
       const trimmedText = textToConvert.trim();
       if (trimmedText !== "") {
-        if (this.ttsCache.has(trimmedText)) {
+        const cachedBuffer = this.ttsCache.get(trimmedText);
+        if (cachedBuffer) {
           console.log('TTS found in cache.');
-          const cachedBuffer = this.ttsCache.get(trimmedText);
           this.playCachedTts(time, cachedBuffer);
         } else {
           console.log('TTS not found in cache. Requesting TTS conversion...');
-          const audioBlob = await textToAudioBlob(trimmedText, ttsSpeakingRate);
-          console.log(`TTS conversion successful for "${trimmedText}". Decoding audio data...`);
+          const audioBlob = await textToAudioBlob(trimmedText, this.ttsSpeakingRate);
           const ttsArrayBuffer = await audioBlob.arrayBuffer();
-          this.audioContext.decodeAudioData(ttsArrayBuffer, (buffer) => {
+          this.ac.decodeAudioData(ttsArrayBuffer, (buffer) => {
             console.log('Decoding successful. Caching TTS data...');
             this.ttsCache.set(trimmedText, buffer);
+            console.log("set the ttsCache");
             this.playCachedTts(time, buffer);
           });
         }
       } else {
-        console.log('Skipping TTS scheduling for blank syllable.');
+        console.log('Skipping TTS scheduling for a blank syllable.');
       }
     } catch (error) {
       console.error('Error in scheduleTTS:', error);
@@ -183,56 +180,43 @@ beatTrackSource.start(time, trackOffset);
   }
 
   playCachedTts(time, buffer) {
-    const ttsSource = this.audioContext.createBufferSource();
+    const ttsSource = this.ac.createBufferSource();
     ttsSource.buffer = buffer;
+    console.log("set the ttsSource");
     ttsSource.connect(this.ttsGain);
     ttsSource.start(time);
-    ttsSource.stop(time + this.stepInterval);
+    ttsSource.stop(time + this.stepDuration);
+
+    console.log(`Scheduled TTS playback at ${time}s.`);
   }
 
-  scheduleGain(gainNode, val1, val2, time, noteOnTime) {
-    gainNode.gain.setValueAtTime(val1, time);
-    gainNode.gain.setValueAtTime(0, time + noteOnTime);
-  }
-
-  stopSequencer() {
-    console.log('Stopping sequencer...');
-    this.beatwriter.setCellsPlayable();
-    this.beatwriter.mode = this.previousMode;
-    this.beatwriter.updateModeDisplay();
-    console.log('Sequencer stopped.');
-    console.log('audioContext state: ' + this.audioContext.state);
-  }
-
-  start() {
-    console.log('Starting ModePlay...');
-    this.previousMode = this.beatwriter.mode;
-    this.beatwriter.mode = 'play';
-    this.beatwriter.updateModeDisplay();
-    this.resumeAudioContext();
-    this.schedulePlayback();
-    console.log('ModePlay started.');
-  }
-
-  showBeatCursor(step) {
-    console.log("showBeatCursor called for step:", step);
-
-    this.beatwriter.cells[step].isPlayable = false;
-    console.log("playing step: " + step + "at audioContext time:" + this.audioContext.currentTime);
-
+  showCursor(step, time) {
+  
+  console.log("attempting showCursor");
+  setTimeout(() => {
     this.beatwriter.cells[step].stepPlaying = true;
 
     if (step > 0) {
       this.beatwriter.cells[step - 1].stepPlaying = false;
-      this.beatwriter.cells[step - 1].isPlayable = true;
-    }
-    if (step == this.beatwriter.endMarkerPosition-1) {
-      beatwriter.cells[step].stepPlaying = false;
-    }
-    this.beatwriter.gridView.updateGrid();
 
+console.log ('timeout teddy');
+    }
+
+    this.beatwriter.gridView.updateGrid(); // Keep the vibe flowing
+  }, (time - this.ac.currentTime) * 1000); // Adjusted timeout based on sequencer time
+}
+  
+  stopSequencer() {
+
+    this.beatwriter.mode = this.beatwriter.previousMode;
+    this.beatwriter.controlPanel.updateModeDisplay();
+
+  }
+
+updateGain(gain, gainValue) {
+gainValue = gainValue/100;    gain.gain.setValueAtTime(gainValue, this.ac.currentTime);
+   console.log(gain + "set to " + gainValue);
   }
 }
 
-
-console.log("modePlay.js loaded.");
+console.log("modePlay.js loaded");

@@ -8,7 +8,7 @@ class FileManager {
     var data = {
       fileName: fileName,
       BPM: BPM,
-      beatTrackFileName: beatTrackFileName,
+beatTrackFileName: beatTrackFileName,
       beatwriterCells: beatwriterCells
     };
 
