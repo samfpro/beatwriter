@@ -3,10 +3,12 @@ class FileManager {
     this.beatwriter = beatwriter;
   }
 
-  saveToFileWithMetadata(fileName, BPM, beatTrackFileName, beatwriterCells) {
+  saveToFileWithMetadata(fName, BPM, beatTrackFileName, beatwriterCells) {
     // Create an object to include the metadata and the array of cells
-    var data = {
-      fileName: fileName,
+    console.log("fName:" + fName);
+
+   var data = {
+      fName: fName,
       BPM: BPM,
 beatTrackFileName: beatTrackFileName,
       beatwriterCells: beatwriterCells
@@ -27,7 +29,7 @@ beatTrackFileName: beatTrackFileName,
     // Create an anchor element for downloading
     var a = document.createElement('a');
     a.href = url;
-    a.download = this.beatwriter.verseName; // Set the desired file name
+    a.download = fName + ".txt"; // Set the desired file name
 
     // Trigger a click event on the anchor element to initiate the download
     a.click();
@@ -57,7 +59,7 @@ loadFileWithMetadata() {
         });
 
         // Now, data.beatwriterCells should contain Cell objects
-        this.beatwriter.verseName = data.fileName;
+        this.beatwriter.projectName = data.fileName;
         this.beatwriter.currentBPM = data.BPM;
         this.beatwriter.modePlay.beatTrackFileName = data.beatTrackFileName;
         this.beatwriter.cells = data.beatwriterCells;

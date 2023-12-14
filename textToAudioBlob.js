@@ -7,7 +7,9 @@ async function textToAudioBlob(textToConvert,ttsSpRt) {
 
 if (textToConvert === 'a'){
    textToConvert = "uh";
-
+}
+if (textToConvert === "the"){
+   textToConvert = "duh";
 }
 
   const apiUrl = `https://texttospeech.googleapis.com/v1/text:synthesize?key=${apiKey}`;

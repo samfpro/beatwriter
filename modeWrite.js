@@ -5,28 +5,33 @@ class ModeWrite {
   }
 
   handleGridClick(cellIndex) {
-
-
-    if ('' != this.beatwriter.gridView.getWord()) {
+     if ('' != this.beatwriter.gridView.getWord()) {
       this.processWord();
-    }
+}else{
+this.beatwriter.cells[this.beatwriter.currentCell].syllable = "";
+}
     this.beatwriter.currentCell = cellIndex;
-
-
     console.log("setting current cell to " + this.beatwriter.currentCell);
     this.beatwriter.gridView.updateGrid();
     this.selectTextIfPresent();
-  }
+}
 
   handleGridKeydown(key) {
-    if (key == 'Backspace' && this.beatwriter.gridView.getWord() == '') {
-      this.beatwriter.currentCell--;
+    if ((key == 'Backspace' || key == " ") && this.beatwriter.gridView.getWord() == '') {
       this.beatwriter.cells[this.beatwriter.currentCell].syllable = '';
-      this.beatwriter.gridView.updateGrid();
+if (key == "Backspace"){
+this.beatwriter.currentCell--;
+}else{
+this.beatwriter.currentCell++;
+}
+  this.beatwriter.gridView.updateGrid();
+this.selectTextIfPresent();
       return;
 
     } else if (key === ' ' || key === 'Enter') {
-      if (this.beatwriter.gridView.getWord() == '') {
+      
+
+    if (this.beatwriter.gridView.getWord() == '') {
         this.beatwriter.currentCell++;
         if (key == 'Enter') {
           this.moveToNextRow();

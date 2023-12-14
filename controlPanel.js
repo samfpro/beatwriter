@@ -14,7 +14,7 @@ class ControlPanel {
     this.loadButton = document.getElementById('load-button');
     this.importButton = document.getElementById('import-button');
     this.exportButton = document.getElementById("export-button");
-    this.verseNameInput = document.getElementById("verse-name-input");
+    this.projectNameInput = document.getElementById("project-name-input");
     this.metronomeSwitch = document.getElementById("metronome-switch");
     this.metronomeSwitchUp = document.getElementById("metronome-switch-up");
     this.metronomeSwitchDown = document.getElementById("metronome-switch-down");
@@ -30,8 +30,11 @@ class ControlPanel {
   }
 
   initializeEventListeners() {
-    this.verseNameInput.addEventListener('keydown', (event) => this.handleVerseNameInputKeydown());
-    this.modeButton.addEventListener('click', () => this.handleModeButtonClick());
+    this.projectNameInput.addEventListener('keydown', (event) => this.handleProjectNameInputKeydown());
+    
+this.projectNameInput.addEventListener('click', (event) => this.handleProjectNameInputClick());
+
+this.modeButton.addEventListener('click', () => this.handleModeButtonClick());
     this.playButton.addEventListener('click', () => this.handlePlayButtonClick());
     this.saveButton.addEventListener('click', () => this.handleSaveButtonClick());
     this.loadButton.addEventListener('click', () => this.handleLoadButtonClick());
@@ -39,13 +42,13 @@ class ControlPanel {
     this.exportButton.addEventListener('click', () => this.handleExportButtonClick());
     this.metronomeSwitch.addEventListener('click', () => this.toggleMetronome());
 
-this.beatTrackFader.addEventListener('input', (event) => this.handleGainChange(event));
+    this.beatTrackFader.addEventListener('input', (event) => this.handleGainChange(event));
 
-this.metronomeFader.addEventListener('input', (event) => this.handleGainChange(event));
+    this.metronomeFader.addEventListener('input', (event) => this.handleGainChange(event));
 
-this.ttsFader.addEventListener('input', (event) => this.handleGainChange(event));
+    this.ttsFader.addEventListener('input', (event) => this.handleGainChange(event));
 
-this.masterFader.addEventListener('input', (event) => this.handleGainChange(event));
+    this.masterFader.addEventListener('input', (event) => this.handleGainChange(event));
   }
 
   toggleMetronome() {
@@ -111,7 +114,8 @@ this.masterFader.addEventListener('input', (event) => this.handleGainChange(even
   }
 
   handleSaveButtonClick() {
-    this.beatwriter.fileManager.saveToFileWithMetadata(this.beatwriter.verseName, this.beatwriter.currentBPM, this.beatwriter.modePlay.beatTrackFileName, this.beatwriter.cells);
+    this.beatwriter.projectName = this.projectNameInput.textContent;
+    this.beatwriter.fileManager.saveToFileWithMetadata(this.beatwriter.projectName, this.beatwriter.currentBPM, this.beatwriter.modePlay.beatTrackFileName, this.beatwriter.cells);
 
   }
 
@@ -136,41 +140,40 @@ this.masterFader.addEventListener('input', (event) => this.handleGainChange(even
     this.beatwriter.fileManager.loadFileWithMetadata();
   }
 
-  handleVerseNameInputKeydown(event) {
-    if (event.key == 'Enter') {
-      this.beatwriter.verseName = this.verseNameInput.value;
-      this.beatwriter.gridView.updateGrid();
-    }
+  handleProjectNameInputKeydown(event) {
+    this.beatwriter.projectName = this.projectNameInput.value;
+    this.beatwriter.gridView.updateGrid();
   }
 
+
   handleGainChange(event) {
-    
-  const fader = event.target;
+
+    const fader = event.target;
     console.log(fader.id);
-  const newGain = fader.value/100;
-  let gain = null;
+    const newGain = fader.value / 100;
+    let gain = null;
 
 
     switch (fader.id) {
       case 'beat-track-fader':
         gain = this.beatwriter.modePlay.beatTrackGain;
-      break;
+        break;
       case 'tts-fader':
         gain = this.beatwriter.modePlay.ttsGain;
-      break;
+        break;
       case 'metronome-fader':
         gain = this.beatwriter.modePlay.sineGain;
         this.beatwriter.modePlay.updateGain(gain, newGain);
         gain = this.beatwriter.modePlay.sawGain;
-      break;
+        break;
       case 'master-fader':
         gain = this.beatwriter.modePlay.masterGain;
-      break;
+        break;
       default:
     }
-       this.beatwriter.modePlay.updateGain(gain, newGain);
-  
-   }
+    this.beatwriter.modePlay.updateGain(gain, newGain);
+
+  }
 
 }
 

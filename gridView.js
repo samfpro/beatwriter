@@ -22,7 +22,8 @@ class GridView {
 
       const eMarker = document.createElement('div');
       if (i === 0) {
-        sMarker.classList.add('start-marker-active');
+        
+sMarker.classList.add('start-marker-active');
         eMarker.classList.add('end-marker-active');
       }
 
@@ -35,12 +36,9 @@ class GridView {
       sMarker.dataset.index = i;
       eMarker.dataset.index = i;
 
-      this.gridStartMarkerLabelContainer.appendChild(barLabel);
-
-      this.gridStartMarkerContainer.appendChild(sMarker);
-
-
-      this.gridEndMarkerContainer.appendChild(eMarker);
+      this.gridStartMarkerContainer.appendChild(barLabel);
+ this.gridStartMarkerContainer.appendChild(sMarker);
+this.gridEndMarkerContainer.appendChild(eMarker);
     }
     this.gridStartMarkers = document.querySelectorAll(".start-marker");
     this.gridEndMarkers = document.querySelectorAll(".end-marker");
@@ -88,19 +86,21 @@ this.gridContainer.appendChild(gridColumnLabel);
 
   updateGrid() {
 
-    for (let i = this.beatwriter.gridStartMarkerPosition; i < this.beatwriter.gridEndMarkerPosition + 1; i++) {
+      if (this.beatwriter.mode === 'play') {    
+for (let i = this.beatwriter.startMarkerPosition; i < this.beatwriter.endMarkerPosition + 1; i++) {
 
-      if (this.beatwriter.mode === 'play') {
         if (this.beatwriter.cells[i].stepPlaying) {
  console.log("setting cell " + i + " to stepPlaying");         
 this.gridCells[i].classList.add('step-playing');
-          return;
+
 
         } else {
           this.gridCells[i].classList.remove('step-playing');
-          return;
+          
         }
+      
       }
+return;
     }
     const currentGridStartMarker = this.gridStartMarkerContainer.querySelector('.start-marker-active');
     if (currentGridStartMarker.dataset.index != this.beatwriter.startMarkerPosition) {

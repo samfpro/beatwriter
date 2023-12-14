@@ -11,7 +11,7 @@ class Beatwriter {
     this.endMarkerPosition = 16;
     this.currentCell = 0;
     this.currentBPM = 83;
-    this.verseName = "untitled.json";
+    this.projectName = "untitled.json";
     this.metronomeOn = true;
     this.isPlaying = false;
     this.previousMode = '';
