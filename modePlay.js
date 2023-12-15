@@ -79,9 +79,10 @@ const stepsToPlay = this.beatwriter.endMarkerPosition - this.beatwriter.startMar
     this.stepDuration = 60 / (this.beatwriter.currentBPM * 4);
 
     this.playbackDuration = stepsToPlay * this.stepDuration;
-    const startTime = this.ac.currentTime + (16 * this.stepDuration);
+    let startTime = this.ac.currentTime + (16 * this.stepDuration);
     const beatTrackOffset = this.beatwriter.startMarkerPosition * this.stepDuration;
- let beatTrackScheduled = await this.scheduleBeatTrack(startTime, beatTrackOffset);
+ const beatTrackNode = await this.createBeatTrack();
+ this.scheduleBeatTrack(beatTrackNode, startTime, beatTrackOffset);
 
    if (beatTrackScheduled){
    for (let step = this.beatwriter.startMarkerPosition; step < this.beatwriter.endMarkerPosition + 1; step++) {
@@ -124,7 +125,7 @@ const stepsToPlay = this.beatwriter.endMarkerPosition - this.beatwriter.startMar
   }
 
 
-  async scheduleBeatTrack(time, offset) {
+  async createBeatTrack() {
     try {
       
 console.log("creating beatTrackNode")
@@ -156,16 +157,20 @@ this.beatTrackBuffer = await this.ac.decodeAudioData(btArrayBuffer);
       if (this.beatTrackBuffer) {
         beatTrackNode.buffer = this.beatTrackBuffer;
         beatTrackNode.connect(this.beatTrackGain);
-        beatTrackNode.start(time, offset);
-        beatTrackNode.stop(time + this.playbackDuration);
+
       }
 
     } catch (error) {
       console.error('Error loading beat track:', error);
     }
-    return true;
+    return beatTrackNode;
   }
 
+scheduleBeatTrack(node, time, offset){
+    node.start(time);
+    node.stop(time + this.playbackDuration, offset);
+     
+}
 
   async scheduleTts(time, textToConvert) {
     console.log(`Scheduling TTS for "${textToConvert}" at ${time}s...`);
