@@ -28,7 +28,7 @@ sMarker.classList.add('start-marker-active');
       }
 
       barLabel.classList.add('bar-label');
-      sMarker.classList.add('start-marker');
+      sMarker.classList.add('start-marker')
       eMarker.classList.add('end-marker');
       sMarker.addEventListener("click", (event) => this.handleStartMarkerClick(event));
       eMarker.addEventListener("click", (event) => this.handleEndMarkerClick(event));

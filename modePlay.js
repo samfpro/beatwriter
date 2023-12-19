@@ -5,7 +5,7 @@ class ModePlay {
     this.ac = new AudioContext();
     this.ttsSpeakingRate = 3;
     this.ttsSpeakingVoice = 1;
-    this.beatTrackName = "Turtletuck_83BPM.wav";
+    this.beatTrackName = "Turtletuck_83BPM.mp3";
     this.playbackDuration = 0;
     this.stepDuration = 0;
     this.resumeAudioContext();
@@ -44,7 +44,7 @@ class ModePlay {
   }
 
   buildAudioGraph() {
-    
+
     console.log("creating gains");
 
     this.metronomeGain = this.ac.createGain();
@@ -55,10 +55,10 @@ class ModePlay {
     this.masterGain = this.ac.createGain();
     console.log(this.ac);
 
-        console.log("connecting graph");
+    console.log("connecting graph");
 
 
-this.sineGain.connect(this.metronomeGain);
+    this.sineGain.connect(this.metronomeGain);
     this.sawGain.connect(this.metronomeGain);
     this.metronomeGain.connect(this.masterGain);
     this.ttsGain.connect(this.masterGain);
@@ -71,21 +71,21 @@ this.sineGain.connect(this.metronomeGain);
     this.masterGain.gain.setValueAtTime(1, this.ac.currentTime);
   }
 
-   async schedulePlayback() {
-    
-        console.log("scheduling playback");
-const stepsToPlay = this.beatwriter.endMarkerPosition - this.beatwriter.startMarkerPosition;
+  async schedulePlayback() {
+
+    console.log("scheduling playback");
+    const stepsToPlay = this.beatwriter.endMarkerPosition - this.beatwriter.startMarkerPosition;
     console.log("the number of steps to play is: " + stepsToPlay);
-    this.stepDuration = 60 / (this.beatwriter.currentBPM * 4);
+    this.stepDuration = 60 / (this.beatwriter.bpm.currentValue * 4);
 
     this.playbackDuration = stepsToPlay * this.stepDuration;
     let startTime = this.ac.currentTime + (16 * this.stepDuration);
     const beatTrackOffset = this.beatwriter.startMarkerPosition * this.stepDuration;
- const beatTrackNode = await this.createBeatTrack();
- this.scheduleBeatTrack(beatTrackNode, startTime, beatTrackOffset);
+    const beatTrackNode = await this.createBeatTrack();
+    this.scheduleBeatTrack(beatTrackNode, startTime, beatTrackOffset);
 
-   if (beatTrackScheduled){
-   for (let step = this.beatwriter.startMarkerPosition; step < this.beatwriter.endMarkerPosition + 1; step++) {
+
+    for (let step = this.beatwriter.startMarkerPosition; step < this.beatwriter.endMarkerPosition + 1; step++) {
       const time = startTime + (step - this.beatwriter.startMarkerPosition) * this.stepDuration;
 
       if (step == this.beatwriter.endMarkerPosition) {
@@ -95,7 +95,7 @@ const stepsToPlay = this.beatwriter.endMarkerPosition - this.beatwriter.startMar
 
       if (this.beatwriter.metronomeOn) {
         if ((step + 2) % 2 === 0) {
-       this.scheduleOsc(this.sineNodes[step], "sine", this.sineGain, time);
+          this.scheduleOsc(this.sineNodes[step], "sine", this.sineGain, time);
         }
         if ((step + 4) % 8 === 0) {
           this.scheduleOsc(this.sawNodes[step], "saw", this.sawGain, time);
@@ -109,7 +109,7 @@ const stepsToPlay = this.beatwriter.endMarkerPosition - this.beatwriter.startMar
       this.showCursor(step, time);
     }
   }
-  }
+
 
   async scheduleOsc(node, type, gainNode, time) {
     node = this.ac.createOscillator();
@@ -127,22 +127,22 @@ const stepsToPlay = this.beatwriter.endMarkerPosition - this.beatwriter.startMar
 
   async createBeatTrack() {
     try {
-      
-console.log("creating beatTrackNode")
-const beatTrackNode = this.ac.createBufferSource();
+
+      console.log("creating beatTrackNode");
+      const beatTrackNode = this.ac.createBufferSource();
 
       if (this.beatTrackBuffer == null) {
-       "this.beatTrackBuffer id null" 
+        "this.beatTrackBuffer id null"
 
-try {
-    console.log("awaiting fetch response");     
-   const response = await fetch(this.beatTrackName);
-    console.log("setting arrayBuffer");               
-     const btArrayBuffer = await
-response.arrayBuffer();
-          
-    console.log("decoding arrayBuffer");     
-this.beatTrackBuffer = await this.ac.decodeAudioData(btArrayBuffer);
+        try {
+          console.log("awaiting fetch response");
+          const response = await fetch(this.beatTrackName);
+console.log(response);
+          console.log("setting arrayBuffer");
+          const btArrayBuffer = await response.arrayBuffer();
+
+          console.log("decoding arrayBuffer");
+          this.beatTrackBuffer = await this.ac.decodeAudioData(btArrayBuffer);
         } catch (fetchError) {
           console.error('Error fetching and decoding audio data:', fetchError);
 
@@ -159,18 +159,18 @@ this.beatTrackBuffer = await this.ac.decodeAudioData(btArrayBuffer);
         beatTrackNode.connect(this.beatTrackGain);
 
       }
-
+    return beatTrackNode;
     } catch (error) {
       console.error('Error loading beat track:', error);
     }
-    return beatTrackNode;
+
   }
 
-scheduleBeatTrack(node, time, offset){
+  scheduleBeatTrack(node, time, offset) {
     node.start(time);
     node.stop(time + this.playbackDuration, offset);
-     
-}
+
+  }
 
   async scheduleTts(time, textToConvert) {
     console.log(`Scheduling TTS for "${textToConvert}" at ${time}s...`);

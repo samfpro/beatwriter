@@ -7,10 +7,10 @@ class FileManager {
     // Create an object to include the metadata and the array of cells
     console.log("fName:" + fName);
 
-   var data = {
+    var data = {
       fName: fName,
       BPM: BPM,
-beatTrackFileName: beatTrackFileName,
+      beatTrackFileName: beatTrackFileName,
       beatwriterCells: beatwriterCells
     };
 
@@ -38,41 +38,42 @@ beatTrackFileName: beatTrackFileName,
     URL.revokeObjectURL(url);
   }
 
-loadFileWithMetadata() {
-  const input = document.createElement('input');
-  input.type = 'file';
-  input.accept = '.txt'; // Specify the accepted file type
-  input.onchange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const jsonData = event.target.result;
-        console.log('Loaded JSON Data:', jsonData);
+  loadFileWithMetadata() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.txt'; // Specify the accepted file type
+    input.onchange = (event) => {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const jsonData = event.target.result;
+          console.log('Loaded JSON Data:', jsonData);
 
-        const data = JSON.parse(jsonData, (key, value) => {
-          if (key === "beatwriterCells") {
-            // Use the custom deserialization method to restore Cell objects
-            return value.map(cellData => Cell.fromJSON(cellData));
-          }
-          return value;
-        });
+          const data = JSON.parse(jsonData, (key, value) => {
+            if (key === "beatwriterCells") {
+              // Use the custom deserialization method to restore Cell objects
+              return value.map(cellData => Cell.fromJSON(cellData));
+            }
+            return value;
+          });
 
-        // Now, data.beatwriterCells should contain Cell objects
-        this.beatwriter.projectName = data.fileName;
-        this.beatwriter.currentBPM = data.BPM;
-        this.beatwriter.modePlay.beatTrackFileName = data.beatTrackFileName;
-        this.beatwriter.cells = data.beatwriterCells;
-        console.log('Updated Data:', this.beatwriter.verseName, this.beatwriter.currentBPM, this.beatwriter.modePlay.beatTrackFileName, this.beatwriter.cells);
+          // Now, data.beatwriterCells should contain Cell objects
+          this.beatwriter.projectName = data.fileName;
+          this.beatwriter.currentBPM = data.BPM;
+          this.beatwriter.modePlay.beatTrackFileName = data.beatTrackFileName;
+          this.beatwriter.cells = data.beatwriterCells;
+          console.log('Updated Data:', this.beatwriter.verseName, this.beatwriter.currentBPM, this.beatwriter.modePlay.beatTrackFileName, this.beatwriter.cells);
 
-        // Move the grid update inside the onload event handler
-        this.beatwriter.gridView.updateGrid();
-      };
-      reader.readAsText(file);
-    }
-  };
-  input.click();
-}
+          // Move the grid update inside the onload event handler
+          this.controlPanel.updateDisplays();
+          this.beatwriter.gridView.updateGrid();
+        };
+        reader.readAsText(file);
+      }
+    };
+    input.click();
+  }
 
   importText() {
     const input = document.createElement('input');
@@ -120,6 +121,63 @@ loadFileWithMetadata() {
       }
 
     });
+  }
+  saveToLocalStorageWithMetadata(fName, BPM, beatTrackFileName, beatwriterCells) {
+    // Create an object to include the metadata and the array of cells
+    var data = {
+      fName: fName,
+      BPM: BPM,
+      beatTrackFileName: beatTrackFileName,
+      beatwriterCells: beatwriterCells
+    };
+
+    // Save the data to localStorage
+    localStorage.setItem('yourAppData', JSON.stringify(data));
+  }
+
+  loadFromLocalStorageWithMetadata() {
+    // Retrieve data from localStorage
+    const storedData = localStorage.getItem('yourAppData');
+
+    if (storedData) {
+      const data = JSON.parse(storedData, (key, value) => {
+        if (key === "beatwriterCells") {
+          // Use the custom deserialization method to restore Cell objects
+          return value.map(cellData => Cell.fromJSON(cellData));
+        }
+        return value;
+      });
+
+      // Now, data.beatwriterCells should contain Cell objects
+      this.beatwriter.projectName = data.fileName;
+      this.beatwriter.currentBPM = data.BPM;
+      this.beatwriter.modePlay.beatTrackFileName = data.beatTrackFileName;
+      this.beatwriter.cells = data.beatwriterCells;
+      console.log('Loaded Data:', this.beatwriter.projectName, this.beatwriter.currentBPM, this.beatwriter.modePlay.beatTrackFileName, this.beatwriter.cells);
+
+      // Move the grid update inside the onload event handler
+      this.beatwriter.gridView.updateGrid();
+      this.beatwriter.controlPanel.UpdateDisplays();
+    }
+  }
+
+  loadBeatTrack() {
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+
+    fileInput.addEventListener('change', (event) => {
+      const selectedFile = event.target.files[0];
+
+      if (selectedFile) {
+        const filePath = URL.createObjectURL(selectedFile);
+console.log("beatTrackName: " + filePath);
+this.beatwriter.modePlay.beatTrackName = filePath;
+this.beatwriter.modePlay.beatTrackBuffer= null;
+      }
+    });
+
+    fileInput.click();
+    this.beatwriter.controlPanel.updateDisplays();
   }
 
 

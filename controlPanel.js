@@ -23,24 +23,31 @@ class ControlPanel {
     this.ttsFader = document.getElementById('tts-fader');
     this.metronomeFader = document.getElementById('metronome-fader');
     this.masterFader = document.getElementById('master-fader');
+    this.beatTrackInput = document.getElementById('beat-track-input');
+    this.beatTrackLoadButton = document.getElementById('beat-track-load-button');
     console.log("instantiating value controller");
-    this.valueController = new ValueController(this);
+this.playValueSelector = new ValueSelector(this.controlPanel, document.getElementById('lcd-container'), this.beatwriter.playParameterValues);
+    this.beatTrackValueSelector = new ValueSelector(this.controlPanel, document.getElementById('beat-track-container'), this.beatwriter.beatTrackParameterValues);
     this.initializeEventListeners();
     this.beatwriter.gridView.updateGrid();
-  }
+
+
+}
 
   initializeEventListeners() {
-    this.projectNameInput.addEventListener('keydown', (event) => this.handleProjectNameInputKeydown());
-    
-this.projectNameInput.addEventListener('click', (event) => this.handleProjectNameInputClick());
+    this.projectNameInput.addEventListener('keydown', (event) => this.handleProjectNameInputInput());
 
-this.modeButton.addEventListener('click', () => this.handleModeButtonClick());
+    this.projectNameInput.addEventListener('click', (event) => this.handleProjectNameInputClick());
+
+    this.modeButton.addEventListener('click', () => this.handleModeButtonClick());
     this.playButton.addEventListener('click', () => this.handlePlayButtonClick());
     this.saveButton.addEventListener('click', () => this.handleSaveButtonClick());
     this.loadButton.addEventListener('click', () => this.handleLoadButtonClick());
     this.importButton.addEventListener('click', () => this.handleImportButtonClick());
     this.exportButton.addEventListener('click', () => this.handleExportButtonClick());
     this.metronomeSwitch.addEventListener('click', () => this.toggleMetronome());
+
+this.beatTrackLoadButton.addEventListener('click', () => this.handleBeatTrackLoadButtonClick());
 
     this.beatTrackFader.addEventListener('input', (event) => this.handleGainChange(event));
 
@@ -140,10 +147,20 @@ this.modeButton.addEventListener('click', () => this.handleModeButtonClick());
     this.beatwriter.fileManager.loadFileWithMetadata();
   }
 
-  handleProjectNameInputKeydown(event) {
+  handleProjectNameInputInput(event) {
     this.beatwriter.projectName = this.projectNameInput.value;
-    this.beatwriter.gridView.updateGrid();
   }
+
+  handleProjectNameInputClick() {
+    this.projectNameInput.focus();
+
+  }
+
+  handleBeatTrackLoadButtonClick(){
+   this.beatwriter.fileManager.loadBeatTrack();
+this.updateDisplays();
+
+}
 
 
   handleGainChange(event) {
@@ -175,6 +192,16 @@ this.modeButton.addEventListener('click', () => this.handleModeButtonClick());
 
   }
 
+
+  updateDisplays() {
+
+    this.beatTrackInput.textContent = this.beatwriter.modePlay.beatTrackName;
+
+    this.projectNameInput.textContent = this.beatwriter.projectName;
+
+
+
+  }
 }
 
-console.log("controlPanel.js.loaded");
+  console.log("controlPanel.js.loaded");

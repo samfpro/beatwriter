@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -29,10 +28,10 @@
                 <div class="sub-container-column">
                     <div class="label" id="beat-track-label">BEAT TRACK</div>
                     <div id="beat-track-input" class="lcd-text-display">Load a Track</div>
-                    <button id="load-beat-track-button" class="button button-size-S">LOAD</button>
+                    <button id="beat-track-load-button" class="button button-size-S">LOAD</button>
                 </div>
                 <div class="sub-container-column">
-                    <button id="bt-lcd-button" class="button button-size-L">VAL</button>
+                    <button id="bt-lcd-button" class="button button-size-L toggle-button">VAL</button>
                 </div>
                 <div class="sub-container-grid lcd-selector">
                     <div class="label">OFFSET</div>
@@ -41,7 +40,7 @@
                     <div class="lcd-selector-arrow-right"></div>
                     <div class="lcd-selector-arrow-right"></div>
                     <div class="lcd-selector-arrow-right"></div>
-                    <div id="bt-lcd-light-o" class="light val-active"></div>
+                    <div id="bt-lcd-light-o" class="light mode-active"></div>
                     <div id="lcd-light-s" class="light"> </div>
                     <div id="lcd-light-m" class="light"></div>
                 </div>
@@ -51,7 +50,7 @@
                 </div>
                 <div class="up-down-btn-container">
                     <button class="button lcd-up-btn lcd-up-down-btn button-size-XS" id="bt-lcd-up-btn">&#9650;</button>
-                    <button class="button lcd-up-down-btn button-size-XS" id="bt-lcd-down-btn">&#9660;</button>
+                    <button class="button lcd-up-down-btn lcd-down-btn button-size-XS" id="bt-lcd-down-btn">&#9660;</button>
                 </div>
             </div>
         </div>
@@ -69,18 +68,19 @@
         <div class='control-panel' id="bottom-panel">
             <div class="cp-section" id="mode-container">
                 <div class="sub-container-column">
-                    <button id="mode-button" class="button button-size-L">MODE</button>
+                    <button id="mode-button" class="button button-size-L toggle-button">MODE</button>
                 </div>
                 <div class="sub-container-grid lcd-selector">
-                    <div id="light-mode-write" class="light mode-active"></div>
-                    <div id="light-mode-arrange" class="light"></div>
-                    <div id="light-mode-play" class="light"></div>
-                    <div class="lcd-selector-arrow-left"></div>
-                    <div class="lcd-selector-arrow-left"></div>
-                    <div class="lcd-selector-arrow-left"></div>
+
                     <div class="label">WRIT</div>
                     <div class="label">ARNG</div>
                     <div class="label">PLAY</div>
+                    <div class="lcd-selector-arrow-right"></div>
+                    <div class="lcd-selector-arrow-right"></div>
+                    <div class="lcd-selector-arrow-right"></div>
+                    <div id="light-mode-write" class="light mode-active"></div>
+                    <div id="light-mode-arrange" class="light"></div>
+                    <div id="light-mode-play" class="light"></div>
                 </div>
             </div>
             <div class="cp-section" id="transport-container">
@@ -88,23 +88,23 @@
                 <button id="stop-button" class="button button-size-L">STOP</button>
             </div>
             <div class="cp-section" id="lcd-container">
-                <button id="lcd-button" class="button button-size-L">VAL</button>
+                <button id="lcd-button" class="button button-size-L toggle-button">VAL</button>
 
                 <div class="sub-container-grid lcd-selector">
                     <div class="label">BPM</div>
-                    <div class="label">VTP</div>
-                    <div class="label">VRT</div>
+                    <div class="label">VTYPE</div>
+                    <div class="label">VRATE</div>
                     <div class="lcd-selector-arrow-right"></div>
                     <div class="lcd-selector-arrow-right"></div>
                     <div class="lcd-selector-arrow-right"></div>
-                    <div id="lcd-light-b" class="light val-active"></div>
+                    <div id="lcd-light-b" class="light mode-active"></div>
                     <div id="lcd-light-v" class="light"> </div>
                     <div id="lcd-light-r" class="light"></div>
                 </div>
                 <div id="lcd-display" class="lcd-display" tabindex="0" role="textbox" aria-readonly="true">120</div>
                 <div class="up-down-btn-container">
                     <button class="button lcd-up-btn lcd-up-down-btn button-size-XS" id="lcd-up-btn">&#9650;</button>
-                    <button class="button lcd-up-down-btn button-size-XS" id="lcd-down-btn">&#9660;</button>
+                    <button class="button lcd-down-btn lcd-up-down-btn button-size-XS" id="lcd-down-btn">&#9660;</button>
                 </div>
             </div>
             <div class="cp-section" id="metronome-container">
@@ -145,19 +145,20 @@
     <script src="fileManager.js"></script>
     <script src="textToAudioBlob.js"></script>
     <script src="controlPanel.js"></script>
-    <script src="valueController.js"></script>
+        <script src="parameterValue.js"></script>
+    <script src="valueSelector.js"></script>
     <script src="beatWriter.js"></script>
-<script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/serviceWorker.js')
-      .then((registration) => {
-        console.log('Service Worker registered with scope:', registration.scope);
-      })
-      .catch((error) => {
-        console.error('Service Worker registration failed:', error);
-      });
-  }
-</script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/serviceWorker.js')
+                .then((registration) => {
+                    console.log('Service Worker registered with scope:', registration.scope);
+                })
+                .catch((error) => {
+                    console.error('Service Worker registration failed:', error);
+                });
+        }
+    </script>
 
 
 </body>

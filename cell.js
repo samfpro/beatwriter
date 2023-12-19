@@ -17,6 +17,5 @@ class Cell {
   }
 }
 
-
-;
 console.log("cell.js loaded");
+
