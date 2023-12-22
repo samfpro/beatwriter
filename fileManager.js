@@ -173,11 +173,12 @@ class FileManager {
 console.log("beatTrackName: " + filePath);
 this.beatwriter.modePlay.beatTrackName = filePath;
 this.beatwriter.modePlay.beatTrackBuffer= null;
+this.beatwriter.controlPanel.updateDisplays();
       }
     });
 
     fileInput.click();
-    this.beatwriter.controlPanel.updateDisplays();
+
   }
 
 

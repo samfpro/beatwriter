@@ -80,7 +80,7 @@ class ModePlay {
 
     this.playbackDuration = stepsToPlay * this.stepDuration;
     let startTime = this.ac.currentTime + (16 * this.stepDuration);
-    const beatTrackOffset = this.beatwriter.startMarkerPosition * this.stepDuration;
+    const beatTrackOffset = (this.beatwriter.startMarkerPosition + this.beatwriter.beatTrackOffset) * this.stepDuration;
     const beatTrackNode = await this.createBeatTrack();
     this.scheduleBeatTrack(beatTrackNode, startTime, beatTrackOffset);
 

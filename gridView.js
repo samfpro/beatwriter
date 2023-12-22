@@ -6,7 +6,7 @@ class GridView {
     this.gridStartMarkerLabelContainer = document.getElementById("start-marker-label-container");
     this.gridEndMarkerContainer = document.getElementById("end-marker-container");
     this.gridCells = [];
-    this.gridStartMarkers = [];
+    this.gridStartMarkersl = [];
     this.gridEndMarkers = [];
     this.generateGrid();
     console.log("gridView Instance successful");
@@ -14,7 +14,7 @@ class GridView {
 
   generateGrid() {
     this.gridContainer.innerHTML = '';
-    for (let i = 0; i < 16; i++) {
+    for (let i = 0; i < 18; i++) {
 
       const barLabel = document.createElement('div');
       barLabel.textContent = i + 1;
@@ -45,17 +45,17 @@ this.gridEndMarkerContainer.appendChild(eMarker);
 
 
     for (let i = 0; i < this.beatwriter.cells.length + 32; i++) {
-      if (i < 16 || i > 271){
+      if (i < 16 || i > 303){
 
         const gridColumnLabel = document.createElement('div');
 gridColumnLabel.classList.add("grid-column-label");
 let col;
         
-            if (i < 16) {
-         col = i + 1;        
+            if (i < 19) {
+         col = i+1;        
 this.gridContainer.appendChild(gridColumnLabel);
           }else{
-         col = i - 271;
+         col = i - 303;
 this.gridContainer.appendChild(gridColumnLabel);
 }
         gridColumnLabel.textContent = col;

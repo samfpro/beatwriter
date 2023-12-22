@@ -158,7 +158,6 @@ this.beatTrackLoadButton.addEventListener('click', () => this.handleBeatTrackLoa
 
   handleBeatTrackLoadButtonClick(){
    this.beatwriter.fileManager.loadBeatTrack();
-this.updateDisplays();
 
 }
 
