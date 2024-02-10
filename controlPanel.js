@@ -26,8 +26,8 @@ class ControlPanel {
     this.beatTrackInput = document.getElementById('beat-track-input');
     this.beatTrackLoadButton = document.getElementById('beat-track-load-button');
     console.log("instantiating value controller");
-this.playValueSelector = new ValueSelector(this.controlPanel, document.getElementById('lcd-container'), this.beatwriter.playParameterValues);
-    this.beatTrackValueSelector = new ValueSelector(this.controlPanel, document.getElementById('beat-track-container'), this.beatwriter.beatTrackParameterValues);
+this.playValueSelector = new ValueSelector(this.beatwriter.gridView, document.getElementById('lcd-container'), this.beatwriter.playParameterValues);
+    this.beatTrackValueSelector = new ValueSelector(this.beatwriter.gridView, document.getElementById('beat-track-container'), this.beatwriter.beatTrackParameterValues);
     this.initializeEventListeners();
     this.beatwriter.gridView.updateGrid();
 
@@ -127,7 +127,7 @@ this.beatTrackLoadButton.addEventListener('click', () => this.handleBeatTrackLoa
   }
 
 
-  handlePlayButtonClick() {
+  async handlePlayButtonClick() {
 
     if (this.beatwriter.mode != 'play') {
       this.beatwriter.previousMode = this.beatwriter.mode;
@@ -136,9 +136,9 @@ this.beatTrackLoadButton.addEventListener('click', () => this.handleBeatTrackLoa
 
       this.beatwriter.mode = 'play';
       this.updateModeDisplay();
-      this.beatwriter.modePlay.start();
+      await this.beatwriter.modePlay.start();
     } else {
-      this.beatwriter.modePlay.stopSequencer();
+      await this.beatwriter.modePlay.stopSequencer();
       console.log("cp handled play button click");
     }
   }

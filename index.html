@@ -27,22 +27,24 @@
             <div class="cp-section" id="beat-track-container">
                 <div class="sub-container-column">
                     <div class="label" id="beat-track-label">BEAT TRACK</div>
-                    <div id="beat-track-input" class="lcd-text-display">Load a Track</div>
-                    <button id="beat-track-load-button" class="button button-size-S">LOAD</button>
-                </div>
+<div id="beat-track-input" class="lcd-text-display">Load a Track</div>
+                         <div class= "sub-container-row"><button id="beat-track-load-button" class="button button-size-S">LOAD</button> 
+<button class= 'button button-size-S'id="beat-track-preview-button">PRVW</button>
+                
+</div></div>
                 <div class="sub-container-column">
                     <button id="bt-lcd-button" class="button button-size-L toggle-button">VAL</button>
                 </div>
                 <div class="sub-container-grid lcd-selector">
-                    <div class="label">OFFSET</div>
-                    <div class="label">LEAD-IN</div>
+                    <div class="label">OFFSET-MS</div>
+                    <div class="label">LEADIN-BARS</div>
                     <div class="label">PLAYRATE</div>
                     <div class="lcd-selector-arrow-right"></div>
                     <div class="lcd-selector-arrow-right"></div>
                     <div class="lcd-selector-arrow-right"></div>
                     <div id="bt-lcd-light-o" class="light mode-active"></div>
-                    <div id="lcd-light-s" class="light"> </div>
-                    <div id="lcd-light-m" class="light"></div>
+                    <div id="bt-lcd-light-s" class="light"> </div>
+                    <div id="bt-lcd-light-m" class="light"></div>
                 </div>
 
                 <div class="sub-container-column">
@@ -54,7 +56,14 @@
                 </div>
             </div>
         </div>
-        <div class="control-panel" id="middle-panel">
+        <div class="control-panel" id="beat-track-wave-view-container"><canvas id="beat-track-wave-view"><div class="control-panel" id="beat-track-wave-view-container">
+    <canvas id="beat-track-wave-view"></canvas>
+    <!-- Red Box Canvas -->
+    <canvas id="red-box-canvas"></canvas>
+</div>
+</canvas></div>
+
+<div class="control-panel" id="middle-panel">
             <div id="main-screen">
                 <div id="start-marker-container"> </div>
                 <div id="grid-container"> </div>
@@ -65,6 +74,7 @@
             <div class="grid-tab grid-tab-active" id="grid-tab-01">01</div>
             <div class="grid-tab" id="grid-tab-add">+</div>
         </div>
+        <div class="control-panel" id="console-panel">starting console...</div>
         <div class='control-panel' id="bottom-panel">
             <div class="cp-section" id="mode-container">
                 <div class="sub-container-column">
@@ -135,6 +145,7 @@
         </div>
     </div>
     <!-- Scripts moved to the body -->
+    <script src="parameterValue.js"></script>
     <script src="constants.js"></script>
     <script src="cell.js"></script>
     <script src="gridView.js"></script>
@@ -145,21 +156,9 @@
     <script src="fileManager.js"></script>
     <script src="textToAudioBlob.js"></script>
     <script src="controlPanel.js"></script>
-        <script src="parameterValue.js"></script>
     <script src="valueSelector.js"></script>
+    <script src="waveFormView.js"></script>
     <script src="beatWriter.js"></script>
-    <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/serviceWorker.js')
-                .then((registration) => {
-                    console.log('Service Worker registered with scope:', registration.scope);
-                })
-                .catch((error) => {
-                    console.error('Service Worker registration failed:', error);
-                });
-        }
-    </script>
-
 
 </body>
 

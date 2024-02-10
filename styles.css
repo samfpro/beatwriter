@@ -47,7 +47,11 @@ input[type="range"]::-webkit-slider-thumb {
     border-bottom-color: #6C8EBF;
 }
 
+.error{
 
+color: red;
+
+}
 
 input {
     border-radius: 3px;
@@ -258,6 +262,24 @@ body {
     width: 100px;
 }
 
+#beat-track-wave-view-container {
+    position: relative;
+}
+
+
+#beat-track-wave-view {
+  width: 570px; 
+  height: 30px;
+  border: 1px solid black;
+}
+
+#red-box-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1; /* Ensure it's positioned above the waveform canvas */
+}
+
 #main-screen {
     width: 100%;
     display: grid;
@@ -286,7 +308,7 @@ body {
 #start-marker-container {
     margin-top: 10px;
     display: grid;
-    grid-template-rows: repeat(16, 20px);
+    grid-template-rows: repeat(18, 20px);
     grid-template-columns: 2fr 5fr;
     gap: 0px;
     padding: 0px;
@@ -295,7 +317,7 @@ body {
 #grid-container {
     display: grid;
     grid-template-columns: repeat(16, 30px);
-    grid-template-rows: 10px repeat(16, 20px) 10px;
+    grid-template-rows: 10px repeat(18, 20px) 10px;
     padding: 0px;
     gap: 0px;
 }
@@ -315,7 +337,7 @@ body {
     margin-top: 10px;
     gap: 0px;
     display: grid;
-    grid-template-rows: repeat(16, 20px);
+    grid-template-rows: repeat(18, 20px);
     gap: 0px;
     padding: 0px;
 }
@@ -524,6 +546,22 @@ body {
 .button-size-XS {
     height: 20px;
     width: 20px;
+
+}
+
+#console-panel {
+  /* Your existing styles */
+  font-size: 8px;
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Align children to the top */
+  justify-content: flex-start; /* Align children to the left */
+  overflow: auto;
+}
+.console-message{
+text-align:left;
+font-family: 'VT-323';
 
 }
 

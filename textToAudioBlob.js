@@ -1,4 +1,43 @@
-async function textToAudioBlob(textToConvert,ttsSpRt) {
+
+
+
+async function textToAudioBlob(textToConvert, ttsSpRt, ttsVoc) {
+console.log("loading voices bro");
+const voices = {
+  1: { name: 'en-US-Studio-M', gender: 'MALE' },
+  2: { name: 'en-US-Journey-F', gender: 'FEMALE' },
+  3: { name: 'en-US-Neural2-A', gender: 'MALE' },
+  4: { name: 'en-US-Neural2-C', gender: 'FEMALE' },
+  5: { name: 'en-US-Neural2-D', gender: 'MALE' },
+  6: { name: 'en-US-Neural2-E', gender: 'FEMALE' },
+  7: { name: 'en-US-Neural2-F', gender: 'FEMALE' },
+  8: { name: 'en-US-Neural2-G', gender: 'FEMALE' },
+  9: { name: 'en-US-Neural2-H', gender: 'FEMALE' },
+  10: { name: 'en-US-Neural2-I', gender: 'MALE' },
+  11: { name: 'en-US-Neural2-J', gender: 'MALE' },
+  12: { name: 'en-US-News-K', gender: 'FEMALE' },
+  13: { name: 'en-US-News-L', gender: 'FEMALE' },
+  14: { name: 'en-US-News-N', gender: 'MALE' },
+  15: { name: 'en-US-Polyglot-1', gender: 'MALE' },
+  16: { name: 'en-US-Standard-A', gender: 'MALE' },
+  17: { name: 'en-US-Standard-B', gender: 'MALE' },
+  18: { name: 'en-US-Standard-C', gender: 'FEMALE' },
+  19: { name: 'en-US-Standard-D', gender: 'MALE' },
+  20: { name: 'en-US-Standard-E', gender: 'FEMALE' },
+  21: { name: 'en-US-Standard-F', gender: 'FEMALE' },
+  22: { name: 'en-US-Standard-G', gender: 'FEMALE' },
+  23: { name: 'en-US-Standard-H', gender: 'FEMALE' },
+  24: { name: 'en-US-Standard-I', gender: 'MALE' },
+  25: { name: 'en-US-Standard-J', gender: 'MALE' },
+  26: { name: 'en-US-Studio-O', gender: 'FEMALE' },
+  27: { name: 'en-US-Studio-Q', gender: 'MALE' },
+  28: { name: 'en-US-Wavenet-A', gender: 'MALE' },
+  29: { name: 'en-US-Wavenet-B', gender: 'MALE' },
+};
+
+const selectedVoice = voices[ttsVoc];
+console.log("the current voice is:" + selectedVoice);
+
   const apiKey = 'AIzaSyAUdCwRe0WxgyJB1bcHn-lYX__PLDCOGy4';
 
   if (!textToConvert || textToConvert.trim() === '') {
@@ -14,20 +53,20 @@ if (textToConvert === "the"){
 
   const apiUrl = `https://texttospeech.googleapis.com/v1/text:synthesize?key=${apiKey}`;
 
-  const requestData = {
-    input: {
-      'text': textToConvert
-    },
-    voice: {
-      'languageCode': 'en-US',
-      'name': 'en-US-Studio-M',
-      'ssmlGender': 'MALE'
-    },
-    audioConfig: {
-      'audioEncoding': 'MP3',
-      'speakingRate': ttsSpRt
-    }
-  };
+const requestData = {
+  input: {
+    'text': textToConvert
+  },
+  voice: {
+    'languageCode': 'en-US',
+    'name': selectedVoice.name,
+    'ssmlGender': selectedVoice.gender
+  },
+  audioConfig: {
+    'audioEncoding': 'MP3',
+    'speakingRate': ttsSpRt
+  }
+};
 
   try {
     const response = await fetch(apiUrl, {
@@ -49,7 +88,7 @@ if (textToConvert === "the"){
       throw new Error('Audio content not found in the response.');
     }
 
-    const audioBlob = base64ToBlob(audioContentBase64);
+    const audioBlob = await base64ToBlob(audioContentBase64);
     return audioBlob;
   } catch (error) {
     console.error('An error occurred while converting text to audio:', error.message);
@@ -59,7 +98,7 @@ if (textToConvert === "the"){
 
 
 // Helper function to convert base64 to blob
-function base64ToBlob(base64) {
+async function base64ToBlob(base64) {
   const binary = atob(base64);
   const arrayBuffer = new ArrayBuffer(binary.length);
   const uint8Array = new Uint8Array(arrayBuffer);

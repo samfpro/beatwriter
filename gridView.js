@@ -6,24 +6,26 @@ class GridView {
     this.gridStartMarkerLabelContainer = document.getElementById("start-marker-label-container");
     this.gridEndMarkerContainer = document.getElementById("end-marker-container");
     this.gridCells = [];
-    this.gridStartMarkersl = [];
+    this.gridStartMarkers = [];
     this.gridEndMarkers = [];
+    this.gridBarLabels = [];
     this.generateGrid();
     console.log("gridView Instance successful");
   }
 
   generateGrid() {
     this.gridContainer.innerHTML = '';
-    for (let i = 0; i < 18; i++) {
 
+
+    for (let i = 0; i < 18; i++) {
       const barLabel = document.createElement('div');
-      barLabel.textContent = i + 1;
+      barLabel.textContent = i;
       const sMarker = document.createElement('div');
 
       const eMarker = document.createElement('div');
       if (i === 0) {
-        
-sMarker.classList.add('start-marker-active');
+
+        sMarker.classList.add('start-marker-active');
         eMarker.classList.add('end-marker-active');
       }
 
@@ -37,30 +39,26 @@ sMarker.classList.add('start-marker-active');
       eMarker.dataset.index = i;
 
       this.gridStartMarkerContainer.appendChild(barLabel);
- this.gridStartMarkerContainer.appendChild(sMarker);
-this.gridEndMarkerContainer.appendChild(eMarker);
+      this.gridStartMarkerContainer.appendChild(sMarker);
+      this.gridEndMarkerContainer.appendChild(eMarker);
     }
-    this.gridStartMarkers = document.querySelectorAll(".start-marker");
-    this.gridEndMarkers = document.querySelectorAll(".end-marker");
+    this.gridStartMarkers = Array.from(document.querySelectorAll(".start-marker"));
+    this.gridEndMarkers = Array.from(document.querySelectorAll(".end-marker"));
+    this.gridBarLabels = document.querySelectorAll(".bar-label");
 
 
     for (let i = 0; i < this.beatwriter.cells.length + 32; i++) {
-      if (i < 16 || i > 303){
-
+      if (i < 16 || i > 303) {
         const gridColumnLabel = document.createElement('div');
-gridColumnLabel.classList.add("grid-column-label");
-let col;
-        
-            if (i < 19) {
-         col = i+1;        
-this.gridContainer.appendChild(gridColumnLabel);
-          }else{
-         col = i - 303;
-this.gridContainer.appendChild(gridColumnLabel);
-}
-        gridColumnLabel.textContent = col;
-
-
+        gridColumnLabel.classList.add("grid-column-label");
+        let col;
+        if (i < 16) {
+          col = i + 1;
+        } else {
+          col = i - 303;
+        }
+        gridColumnLabel.textContent = col; // Set the text content here
+        this.gridContainer.appendChild(gridColumnLabel);
       } else {
         const cell = document.createElement('div');
         cell.classList.add('grid-cell');
@@ -85,34 +83,45 @@ this.gridContainer.appendChild(gridColumnLabel);
   }
 
   updateGrid() {
-
-      if (this.beatwriter.mode === 'play') {    
-for (let i = this.beatwriter.startMarkerPosition; i < this.beatwriter.endMarkerPosition + 1; i++) {
+    if (this.beatwriter.mode === 'play') {
+      for (let i = this.beatwriter.startMarkerPosition; i < this.beatwriter.endMarkerPosition + 1; i++) {
 
         if (this.beatwriter.cells[i].stepPlaying) {
- console.log("setting cell " + i + " to stepPlaying");         
-this.gridCells[i].classList.add('step-playing');
+          console.log("setting cell " + i + " to stepPlaying");
+          this.gridCells[i].classList.add('step-playing');
 
 
         } else {
           this.gridCells[i].classList.remove('step-playing');
-          
+
         }
-      
+
       }
-return;
-    }
-    const currentGridStartMarker = this.gridStartMarkerContainer.querySelector('.start-marker-active');
-    if (currentGridStartMarker.dataset.index != this.beatwriter.startMarkerPosition) {
-      currentGridStartMarker.classList.remove("start-marker-active");
-      this.gridStartMarkers[this.beatwriter.startMarkerPosition / 16].classList.add("start-marker-active");
-    }
-    const currentGridEndMarker = this.gridEndMarkerContainer.querySelector('.end-marker-active');
-    if (currentGridEndMarker.dataset.index != this.beatwriter.endMarkerPosition) {
-      currentGridEndMarker.classList.remove("end-marker-active");
-      this.gridEndMarkers[(this.beatwriter.endMarkerPosition - 16) / 16].classList.add("end-marker-active");
+      return;
     }
 
+    const currentGridStartMarker = this.gridStartMarkerContainer.querySelector('.start-marker-active');
+    if (currentGridStartMarker.dataset.index != this.beatwriter.startMarkerPosition / 16) {
+      currentGridStartMarker.classList.remove("start-marker-active");
+
+      const newGridStartMarker = this.gridStartMarkers[this.beatwriter.startMarkerPosition / 16];
+      console.log(newGridStartMarker);
+
+      if (newGridStartMarker) {
+        newGridStartMarker.classList.add("start-marker-active");
+      }
+    }
+
+
+    const currentGridEndMarker = this.gridEndMarkerContainer.querySelector('.end-marker-active');
+    if (currentGridEndMarker.dataset.index != this.beatwriter.endMarkerPosition / 16) {
+      currentGridEndMarker.classList.remove("end-marker-active");
+
+      const newGridEndMarker = this.gridEndMarkers[(this.beatwriter.endMarkerPosition - 16) / 16];
+      if (newGridEndMarker) {
+        newGridEndMarker.classList.add("end-marker-active");
+      }
+    }
 
     for (let i = 0; i < this.beatwriter.cells.length; i++) {
 
@@ -179,8 +188,9 @@ return;
     this.beatwriter.currentCell = this.beatwriter.startMarkerPosition;
     this.updateGrid();
   }
+
   handleEndMarkerClick(event) {
-    this.beatwriter.endMarkerPosition = event.target.dataset.index * 16 + 16;
+    this.beatwriter.endMarkerPosition = event.target.dataset.index * 16;
     console.log("new end position : " + event.target.dataset.index);
     if (this.beatwriter.endMarkerPosition < this.beatwriter.startMarkerPosition + 1) {
       this.beatwriter.endMarkerPosition = this.beatwriter.startMarkerPosition + 16;

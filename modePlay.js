@@ -4,7 +4,6 @@ class ModePlay {
     this.beatwriter = beatwriter;
     this.ac = new AudioContext();
     this.ttsSpeakingRate = 3;
-    this.ttsSpeakingVoice = 1;
     this.beatTrackName = "Turtletuck_83BPM.mp3";
     this.playbackDuration = 0;
     this.stepDuration = 0;
@@ -43,7 +42,7 @@ class ModePlay {
     }
   }
 
-  buildAudioGraph() {
+  async buildAudioGraph() {
 
     console.log("creating gains");
 
@@ -79,10 +78,30 @@ class ModePlay {
     this.stepDuration = 60 / (this.beatwriter.bpm.currentValue * 4);
 
     this.playbackDuration = stepsToPlay * this.stepDuration;
-    let startTime = this.ac.currentTime + (16 * this.stepDuration);
-    const beatTrackOffset = (this.beatwriter.startMarkerPosition + this.beatwriter.beatTrackOffset) * this.stepDuration;
+    const startTime = this.ac.currentTime + (16 * this.stepDuration);
+console.log("this.beatwriter.startMarkerPosition:" + typeof this.beatwriter.startMarkerPosition + this.beatwriter.startMarkerPosition);
+console.log("this.beatwriter.beatTrackLeadInBars.currentValue:" + typeof this.beatwriter.beatTrackLeadInBars.currentValue + this.beatwriter.beatTrackLeadInBars.currentValue);
+console.log("this.beatwriter.beatTrackOffsetMS.currentValue:" + typeof this.beatwriter.beatTrackOffsetMS.currentValue + this.beatwriter.beatTrackOffsetMS.currentValue);
+console.log("this.stepDuration:" + typeof this.stepDuration + this.stepDuration);
+let beatTrackOffsetS;
+if (this.beatwriter.startMarkerPosition !== 0 || this.beatwriter.beatTrackLeadInBars.currentValue !== 0) {
+    beatTrackOffsetS = (this.beatwriter.startMarkerPosition + (this.beatwriter.beatTrackLeadInBars.currentValue  * 16)) * this.stepDuration;
+} else {
+    beatTrackOffsetS = 0;
+}
+
+if (this.beatwriter.beatTrackOffsetMS.currentValue !== 0) {
+    beatTrackOffsetS += this.beatwriter.beatTrackOffsetMS.currentValue / 1000;
+}
+   console.log(beatTrackOffsetS);
+
+    let beatTrackStartTime = startTime;
+    if (this.beatwriter.startMarkerPosition == 0 && this.beatwriter.beatTrackLeadInBars.currentValuue == 0) {
+      beatTrackStartTime += 16 * this.stepDuration;
+    }
     const beatTrackNode = await this.createBeatTrack();
-    this.scheduleBeatTrack(beatTrackNode, startTime, beatTrackOffset);
+    console.log("beatTrackNode returned!!  attempting to scheju");
+    await this.scheduleBeatTrack(beatTrackNode, beatTrackStartTime, beatTrackOffsetS);
 
 
     for (let step = this.beatwriter.startMarkerPosition; step < this.beatwriter.endMarkerPosition + 1; step++) {
@@ -129,20 +148,21 @@ class ModePlay {
     try {
 
       console.log("creating beatTrackNode");
-      const beatTrackNode = this.ac.createBufferSource();
+      let beatTrackNode = this.ac.createBufferSource();
+      let beatTrackBuffer = null;
 
-      if (this.beatTrackBuffer == null) {
-        "this.beatTrackBuffer id null"
+      if (beatTrackBuffer == null) {
+        console.log("this.beatTrackBuffer is null")
 
         try {
           console.log("awaiting fetch response");
           const response = await fetch(this.beatTrackName);
-console.log(response);
+          console.log(response);
           console.log("setting arrayBuffer");
           const btArrayBuffer = await response.arrayBuffer();
 
           console.log("decoding arrayBuffer");
-          this.beatTrackBuffer = await this.ac.decodeAudioData(btArrayBuffer);
+          beatTrackBuffer = await this.ac.decodeAudioData(btArrayBuffer);
         } catch (fetchError) {
           console.error('Error fetching and decoding audio data:', fetchError);
 
@@ -150,25 +170,28 @@ console.log(response);
         }
       }
 
-      console.log(this.beatTrackBuffer);
+      console.log(beatTrackBuffer);
 
-
-
-      if (this.beatTrackBuffer) {
-        beatTrackNode.buffer = this.beatTrackBuffer;
+      if (beatTrackBuffer != null) {
+console.log("ok the buffa no nullman");        
+beatTrackNode.buffer = beatTrackBuffer;
         beatTrackNode.connect(this.beatTrackGain);
+console.log("beatTrackNode is connected to this.beatTrackGain" );
 
       }
-    return beatTrackNode;
+      return beatTrackNode;
     } catch (error) {
       console.error('Error loading beat track:', error);
     }
 
   }
 
-  scheduleBeatTrack(node, time, offset) {
-    node.start(time);
+  async scheduleBeatTrack(node, time, offset) {
+    console.log("scheduling....and the node is " + node + "and the time is " + time + "and the offset is " + offset);
+    node.start(time, offset);
+    console.log("scheduled beatTrack start at " + time + " widda owfsetta: " + offset);
     node.stop(time + this.playbackDuration, offset);
+    console.log("schedude the stop");
 
   }
 
@@ -177,18 +200,24 @@ console.log(response);
     try {
       const trimmedText = textToConvert.trim();
       if (trimmedText != "") {
+        // Check if the voice has changed
+        if (this.beatwriter.ttsVoice.currentValue !== this.currentTtsVoice) {
+          console.log('TTS voice has changed. Clearing cache.');
+          this.ttsCache.clear();
+          this.currentTtsVoice = this.beatwriter.ttsVoice.currentValue;
+        }
+
         const cachedBuffer = this.ttsCache.get(trimmedText);
         if (cachedBuffer) {
           console.log('TTS found in cache.');
           await this.playCachedTts(time, cachedBuffer);
         } else {
           console.log('TTS not found in cache. Requesting TTS conversion...');
-          const audioBlob = await textToAudioBlob(trimmedText, this.ttsSpeakingRate);
+          const audioBlob = await textToAudioBlob(trimmedText, this.ttsSpeakingRate, this.beatwriter.ttsVoice.currentValue);
           const ttsArrayBuffer = await audioBlob.arrayBuffer();
           this.ac.decodeAudioData(ttsArrayBuffer, (buffer) => {
             console.log('Decoding successful. Caching TTS data...');
             this.ttsCache.set(trimmedText, buffer);
-            console.log("set the ttsCache");
             this.playCachedTts(time, buffer);
           });
         }
@@ -200,14 +229,13 @@ console.log(response);
     }
     console.log('TTS scheduled.');
   }
-
   async playCachedTts(time, buffer) {
     let ttsSource = this.ac.createBufferSource();
     ttsSource.buffer = buffer;
     console.log("set the ttsSource");
     ttsSource.connect(this.ttsGain);
     ttsSource.start(time);
-    ttsSource.stop(time + this.stepDuration);
+    ttsSource.stop(time + (this.stepDuration * 2));
 
     console.log(`Scheduled TTS playback at ${time}s.`);
   }

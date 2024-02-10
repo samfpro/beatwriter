@@ -1,6 +1,6 @@
 class ValueSelector {
-  constructor(controlPanel, lcdContainer, parameterValues) {
-    this.controlPanel = controlPanel;
+  constructor(gridView, lcdContainer, parameterValues) {
+    this.gridView = gridView;
     this.lcdContainer = lcdContainer;
     this.parameterValues = parameterValues;
     console.log(parameterValues);
@@ -83,6 +83,7 @@ class ValueSelector {
   }
 
   updateDisplay() {
+    this.gridView.updateGrid();
     console.log("updating display yeah.");
     this.lcdDisplay.textContent = this.activeValue.currentValue;
   }
