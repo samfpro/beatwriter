@@ -1,18 +1,19 @@
 @font-face {
     font-family: 'VT-323';
-    src: url("VT-323.ttf");
+    src: url("Font/VT-323.ttf");
     font-style: normal;
 }
 
 @font-face {
     font-family: 'Orbitron';
-    src: url("Orbitron-VariableFont_wght.ttf") format('truetype');
+    src: url("Font/Orbitron-VariableFont_wght.ttf") format('truetype');
     font-style: normal;
 }
 
+
 @font-face {
     font-family: 'Digital-7';
-    src: url("Digital-7.ttf");
+    src: url("Font/Digital-7.ttf");
     font-style: normal;
 }
 
@@ -20,16 +21,16 @@
 input[type="range"] {
     -webkit-appearance: slider;
     appearance: none;
-background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0));
+    background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0));
     /* Set background color */
     outline: none;
 }
 
 /* Style the track */
 input[type="range"]::-webkit-slider-runnable-track {
-background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0));
-border-radius: 3px;
-width:5px;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0));
+    border-radius: 3px;
+    width: 5px;
 }
 
 /* Style the thumb */
@@ -47,9 +48,9 @@ input[type="range"]::-webkit-slider-thumb {
     border-bottom-color: #6C8EBF;
 }
 
-.error{
+.error {
 
-color: red;
+    color: red;
 
 }
 
@@ -86,7 +87,8 @@ body {
 
 .control-panel {
     gap: 1px;
-    padding: 1px;
+    padding: 4px;
+   
     display: flex;
     flex-direction: row;
     border-radius: 3px;
@@ -120,13 +122,17 @@ body {
     justify-content: center;
     align-items: center;
     padding: 1px;
+    padding-top: 7px;
     height: 45px;
     margin: 1px;
     gap: 0px;
+    position: relative;
 }
+
 
 .sub-container-grid {
     display: grid;
+    gr
 }
 
 .lcd-selector {
@@ -212,15 +218,6 @@ body {
 
 }
 
-#project-name-label {
-    text-align: left;
-
-}
-
-#project-name-input {
-    width: 100%;
-}
-
 .lcd-text-display {
     font-family: 'Digital-7';
     background-color: black;
@@ -233,8 +230,11 @@ body {
     border-right-width: 0px;
     border-color: #ADD8E6;
     font-size: 10px;
+line-height: 12px;
     border-radius: 3px;
     text-align: left;
+    width: 100%;
+    margin-right: 5px;
 }
 
 #transport-container {
@@ -246,16 +246,25 @@ body {
 
 #play-button {
     margin-right: 0;
+background-image: url('play-button.png');
+height: 40px;
+width: 40px;
 
 }
+
+
+#stop-button {
+    margin-right: 0;
+background-image: url('stop-button.png');
+height: 40px;
+width: 40px;
+
+}
+
 
 #beat-track-container {
     display: flex;
-    flex-diection: row;
-}
-
-#load-beat-track-button {
-    width: 100%;
+    flex-direction: row;
 }
 
 #beat-track-input {
@@ -264,20 +273,40 @@ body {
 
 #beat-track-wave-view-container {
     position: relative;
+    width: 100%;
+    /* Adjust width as needed */
+    height: 45px;
+    /* Adjust height as needed */
 }
-
-
 #beat-track-wave-view {
-  width: 570px; 
-  height: 30px;
-  border: 1px solid black;
+    position: relative;
+    width: 98%;
+    /* Adjust width as needed */
+    height: 38px;
+    /* Adjust height as needed */
+    background-color: black;
+    cursor: pointer;
+    font-size: 24px;
+    padding: 0;
+    color: #789F8A;
+    border-style: solid;
+    border-left-width: 1px;
+    border-bottom-width: 1px;
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-color: #ADD8E6;
+    border-radius: 3px;
+    margin: 3px;
 }
 
-#red-box-canvas {
+
+#waveform-canvas,
+#region-canvas {
     position: absolute;
     top: 0;
     left: 0;
-    z-index: 1; /* Ensure it's positioned above the waveform canvas */
+    width: 100%;
+    height: 100%;
 }
 
 #main-screen {
@@ -285,7 +314,7 @@ body {
     display: grid;
     margin: 5px;
     grid-template-columns: 7% 88% 5%;
-    background-image: url("background.jpeg");
+    background-image: url("Img/background.jpeg");
     background-size: cover;
     justify-content: center;
     border-style: solid;
@@ -328,7 +357,7 @@ body {
     padding: 0px;
 }
 
-.grid-column-label: nth-child(4n+1) {
+.grid-column-label:nth-child(4n+1) {
     font-size: 9px;
     color: white !important;
 }
@@ -347,7 +376,7 @@ body {
     border-top-width: 1px;
     border-bottom-width: 1px;
     border-left-width: 0px;
-    border-right-width: 0px;
+    border-right-width: 0px; a
     border-color: #ADD8E6;
     align-content: center;
 }
@@ -357,7 +386,7 @@ body {
 }
 
 .start-marker-active::before {
-    content: "\2192";
+    content: "\→";
     color: white;
     display: inline-block;
     font-size: 16px;
@@ -377,7 +406,7 @@ body {
 }
 
 .end-marker-active::before {
-    content: "\2190";
+    content: "\←";
     color: white;
     display: inline-block;
     font-size: 16px;
@@ -471,14 +500,29 @@ body {
 
 }
 
+.cp-section-label {
+    font-size: 6px;
+    text-shadow: 1px -1px 0 black;
+    text-align: left;
+    margin: 0;
+    align-self: start;
+    margin-bottom: 2px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: white;
+
+}
+
 .label {
     font-size: 8px;
     text-shadow: 1px -1px 0 black;
     text-align: left;
     margin: 0;
     background-color: black;
-    align-self: start;
+    text-align: right;
     margin-bottom: 2px;
+    padding-left: 6px
 }
 
 .light {
@@ -513,7 +557,7 @@ body {
 .button {
     font-family: 'Orbitron';
     font-size: 10px;
-    background-color: #444;
+    background-color: black;
     color: #fff;
     cursor: pointer;
     text-shadow: 1px -1px 0 black;
@@ -528,40 +572,46 @@ body {
     border-top-color: white;
     text-align: center;
     border-radius: 3px;
-    background: linear-gradient(to bottom, black, #6C8EBF);
-    padding: 0px;
+    padding: 1px 1px;
+    margin: 1px 1px;
+    align-items: center;
 }
 
 .button-size-L {
-    height: 40px;
-    width: 40px;
-    margin-right: 5px;
-    margin-left: 5px;
+    font-size: 26px;
 }
 
 .button-size-S {
     height: 20px;
+    width: 20px;
+    background-size: cover;
+    background-clip: border-box;
 }
 
 .button-size-XS {
-    height: 20px;
-    width: 20px;
+    height: 15px;
+    width: 15px;
 
 }
 
 #console-panel {
-  /* Your existing styles */
-  font-size: 8px;
-  height: 200px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start; /* Align children to the top */
-  justify-content: flex-start; /* Align children to the left */
-  overflow: auto;
+    /* Your existing styles */
+    font-size: 8px;
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    /* Align children to the top */
+    justify-content: flex-start;
+    /* Align children to the left */
+    overflow: auto;
+    color: green;
+    background-color: black;
 }
-.console-message{
-text-align:left;
-font-family: 'VT-323';
+
+.console-message {
+    text-align: left;
+    font-family: 'VT-323';
 
 }
 
@@ -597,7 +647,8 @@ font-family: 'VT-323';
     font-family: 'Digital-7', sans-serif;
     background-color: black;
     cursor: pointer;
-    font-size: 38px;
+    font-size: 24px;
+    padding: 0;
     color: #789F8A;
     border-style: solid;
     border-left-width: 1px;
@@ -607,7 +658,8 @@ font-family: 'VT-323';
     border-color: #ADD8E6;
     text-align: right;
     grid-row: span 3;
-    width: 45px;
+    width: 50px; 
+    height: 32px;
 }
 
 #metronome-container {
@@ -649,7 +701,7 @@ font-family: 'VT-323';
 }
 
 #metronome-light {
-    background-image: url("metronomeLightOn.png");
+    background-image: url("Img/metronomeLightOn.png");
     margin-right: 5px;
     margin-left: 5px;
     width: 20px;
@@ -658,9 +710,9 @@ font-family: 'VT-323';
 }
 
 .metronome-light-off {
-    background-image: url("metronomeLightOff.png") !important;
+    background-image: url("Img/metronomeLightOff.png") !important;
     margin-right: 5px;
-    margin-left: 5px
+    margin-left: 5px;
     width: 20px;
     height: 30px;
     background-size: contain;
@@ -703,7 +755,7 @@ font-family: 'VT-323';
     position: relative;
     transform: translateX(5px);
     margin-right: 15px;
-    background-color:black;
+    background-color: black;
 }
 
 .fader-label {
@@ -733,8 +785,11 @@ font-family: 'VT-323';
 
 }
 
-.toggle-button{
+.toggle-button {
 
-box-shadow: 0 0 0 0 #000, 0 0 0 0 #000, 0 0 0 0 #000, 8px 0 0 0 #000;
+}
 
+input[type="text"] {
+    padding: 0;
+    margin: 0;
 }
