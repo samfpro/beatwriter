@@ -14,6 +14,7 @@ this.beatwriter.cells[this.beatwriter.currentCell].syllable = "";
     console.log("setting current cell to " + this.beatwriter.currentCell);
     this.beatwriter.gridView.updateGrid();
     this.selectTextIfPresent();
+    this.beatwriter.gridView.focusCurrentCell();
 }
 
   handleGridKeydown(key) {
@@ -26,6 +27,7 @@ this.beatwriter.currentCell++;
 }
   this.beatwriter.gridView.updateGrid();
 this.selectTextIfPresent();
+this.beatwriter.gridView.focusCurrentCell();
       return;
 
     } else if (key === ' ' || key === 'Enter') {
@@ -57,6 +59,7 @@ this.selectTextIfPresent();
       this.beatwriter.currentCell++;
     }
     this.beatwriter.gridView.updateGrid();
+    this.beatwriter.gridView.focusCurrentCell();
 
   }
   selectTextIfPresent() {

@@ -13,6 +13,11 @@ class GridView {
     console.log("gridView Instance successful");
   }
 
+  focusCurrentCell(){
+    this.gridCells[this.beatwriter.currentCell].focus();
+
+}
+
   generateGrid() {
     this.gridContainer.innerHTML = '';
 
@@ -142,12 +147,12 @@ class GridView {
       // Set focus and contenteditable based on the beatwriter.currentCell
       if (i == this.beatwriter.currentCell && this.beatwriter.mode == 'write') {
         cellElement.contentEditable = true;
-        cellElement.focus();
 
       } else {
         cellElement.contentEditable = false;
       }
     }
+    this.beatwriter.fileManager.saveToLocalStorage();
     console.log("grid updated succesfully.");
   }
 
@@ -187,15 +192,17 @@ class GridView {
     }
     this.beatwriter.currentCell = this.beatwriter.startMarkerPosition;
     this.updateGrid();
+    this.beatwriter.waveFormView.drawRegions();
   }
 
   handleEndMarkerClick(event) {
-    this.beatwriter.endMarkerPosition = event.target.dataset.index * 16;
+    this.beatwriter.endMarkerPosition = (event.target.dataset.index * 16)+16;
     console.log("new end position : " + event.target.dataset.index);
     if (this.beatwriter.endMarkerPosition < this.beatwriter.startMarkerPosition + 1) {
       this.beatwriter.endMarkerPosition = this.beatwriter.startMarkerPosition + 16;
     }
     this.updateGrid();
+    this.beatwriter.waveFormView.drawRegions();
 
   }
 

@@ -1,6 +1,8 @@
 class ControlPanel {
-  constructor(beatwriter) {
+  constructor(beatwriter, playParameterValues, beatTrackParameterValues) {
     this.beatwriter = beatwriter;
+    this.playParameterValues = playParameterValues;
+    this.beatTrackParameterValues = beatTrackParameterValues;
     this.modeButton = document.getElementById('mode-button');
     this.lightModePlay = document.getElementById('light-mode-play');
     this.lightModeWrite = document.getElementById('light-mode-write');
@@ -25,14 +27,35 @@ class ControlPanel {
     this.masterFader = document.getElementById('master-fader');
     this.beatTrackInput = document.getElementById('beat-track-input');
     this.beatTrackLoadButton = document.getElementById('beat-track-load-button');
+    this.autoBpmButton = document.getElementById("auto-bpm-button");
     console.log("instantiating value controller");
-this.playValueSelector = new ValueSelector(this.beatwriter.gridView, document.getElementById('lcd-container'), this.beatwriter.playParameterValues);
-    this.beatTrackValueSelector = new ValueSelector(this.beatwriter.gridView, document.getElementById('beat-track-container'), this.beatwriter.beatTrackParameterValues);
+    this.playValueSelector = new ValueSelector(beatwriter.gridView, document.getElementById('lcd-container'), beatwriter.playParameterValues, this.beatwriter.fileManager);
+    this.beatTrackValueSelector = new ValueSelector(beatwriter.gridView, document.getElementById('beat-track-container'), beatwriter.beatTrackParameterValues, this.beatwriter.fileManager);
+    this.bpmCalculator = new BPMCalculator(this.beatwriter);
     this.initializeEventListeners();
-    this.beatwriter.gridView.updateGrid();
+    this.displaySvgContent();
+
+  }
+
+  displaySvgContent() {
+    embedSVG("save-button", "Img/save-button.svg");
+    embedSVG("load-button", "Img/load-button.svg");
+    embedSVG("import-button", "Img/import-button.svg");
+    embedSVG("export-button", "Img/export-button.svg");
+    embedSVG("bt-lcd-button", "Img/toggle-button.svg");
+    embedSVG("beat-track-load-button", "Img/load-button.svg");
+    embedSVG("auto-bpm-button", "Img/auto-bpm-button.svg");
+    embedSVG("mode-button", "Img/toggle-button.svg");
+    embedSVG("lcd-button", "Img/toggle-button.svg");
+    embedSVG("play-button", "Img/play-button.svg");
+    embedSVG("stop-button", "Img/stop-button.svg");
+    embedSVG("bounce-button", "Img/bounce-button.svg");
 
 
-}
+
+
+
+  }
 
   initializeEventListeners() {
     this.projectNameInput.addEventListener('keydown', (event) => this.handleProjectNameInputInput());
@@ -45,9 +68,10 @@ this.playValueSelector = new ValueSelector(this.beatwriter.gridView, document.ge
     this.loadButton.addEventListener('click', () => this.handleLoadButtonClick());
     this.importButton.addEventListener('click', () => this.handleImportButtonClick());
     this.exportButton.addEventListener('click', () => this.handleExportButtonClick());
+    this.autoBpmButton.addEventListener('click', () => this.handleAutoBpmButtonClick());
     this.metronomeSwitch.addEventListener('click', () => this.toggleMetronome());
 
-this.beatTrackLoadButton.addEventListener('click', () => this.handleBeatTrackLoadButtonClick());
+    this.beatTrackLoadButton.addEventListener('click', () => this.handleBeatTrackLoadButtonClick());
 
     this.beatTrackFader.addEventListener('input', (event) => this.handleGainChange(event));
 
@@ -71,6 +95,7 @@ this.beatTrackLoadButton.addEventListener('click', () => this.handleBeatTrackLoa
       this.metronomeSwitchUp.classList.add("metronome-switch-position-active");
       this.beatwriter.metronomeOn = true;
       this.metronomeLight.classList.remove("metronome-light-off");
+      this.beatwriter.gridView.updateGrid();
 
     }
 
@@ -122,7 +147,7 @@ this.beatTrackLoadButton.addEventListener('click', () => this.handleBeatTrackLoa
 
   handleSaveButtonClick() {
     this.beatwriter.projectName = this.projectNameInput.textContent;
-    this.beatwriter.fileManager.saveToFileWithMetadata(this.beatwriter.projectName, this.beatwriter.currentBPM, this.beatwriter.modePlay.beatTrackFileName, this.beatwriter.cells);
+    this.beatwriter.fileManager.saveToFile(this.beatwriter.projectName);
 
   }
 
@@ -156,10 +181,20 @@ this.beatTrackLoadButton.addEventListener('click', () => this.handleBeatTrackLoa
 
   }
 
-  handleBeatTrackLoadButtonClick(){
-   this.beatwriter.fileManager.loadBeatTrack();
+  async handleBeatTrackLoadButtonClick() {
+const fileInfo = await this.beatwriter.fileManager.loadBeatTrack();
+const fileName = fileInfo.fileName + '.' + fileInfo.fileExtension;
+this.beatwriter.beatTrack = fileName;
+    this.beatwriter.waveFormView.drawWaveForm(fileName);
+this.updateDisplays();
+  }
+  
 
-}
+   async handleAutoBpmButtonClick() {
+const bpm = await this.bpmCalculator.calculateBPM(this.beatwriter.beatTrack);
+   
+
+  }
 
 
   handleGainChange(event) {
@@ -194,13 +229,108 @@ this.beatTrackLoadButton.addEventListener('click', () => this.handleBeatTrackLoa
 
   updateDisplays() {
 
-    this.beatTrackInput.textContent = this.beatwriter.modePlay.beatTrackName;
+    this.beatTrackInput.textContent = this.beatwriter.beatTrack;
 
     this.projectNameInput.textContent = this.beatwriter.projectName;
 
 
 
   }
+  handleExportButtonClick() {
+    console.log('Export button clicked'); // Add this line for debugging
+
+    const exportFormats = ['Text (.txt)', 'MP3 (.mp3)', 'WAV (.wav)'];
+    const defaultFileName = this.beatwriter.projectName;
+
+    // Create select element for export format
+    const select = document.createElement('select');
+    console.log('Select element created:', select); // Add this line for debugging
+    exportFormats.forEach((format, index) => {
+      const option = document.createElement('option');
+      option.value = index;
+      option.textContent = format;
+      select.appendChild(option);
+    });
+
+    // Create input element for file name
+    const fileNameInput = document.createElement('input');
+    fileNameInput.type = 'text';
+    fileNameInput.value = defaultFileName;
+    console.log('File name input element created:', fileNameInput); // Add this line for debugging
+
+    // Create container for select and input elements
+    const container = document.createElement('div');
+    container.appendChild(select);
+    container.appendChild(fileNameInput);
+
+    // Create modal dialog
+    const modal = document.createElement('div');
+    modal.classList.add('modal');
+    modal.innerHTML = `
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div>${container.outerHTML}</div>
+            <button id="export-confirm-btn">Export</button>
+        </div>
+    `;
+
+    // Create container for modal dialog
+    const modalContainer = document.createElement('div');
+    modalContainer.classList.add('modal-container');
+    modalContainer.appendChild(modal);
+
+    document.body.appendChild(modalContainer); // Append modal container to body
+
+    // Display modal dialog
+    modal.style.display = 'block';
+
+    // Close modal when close button or outside modal is clicked
+    const closeButton = modal.querySelector('.close');
+    closeButton.onclick = () => {
+      modal.style.display = 'none';
+      document.body.removeChild(modalContainer);
+    };
+    window.onclick = (event) => {
+      if (event.target === modal) {
+        modal.style.display = 'none';
+        document.body.removeChild(modalContainer);
+      }
+    };
+    // Handle export button click
+    const exportButton = modal.querySelector('#export-confirm-btn');
+    exportButton.onclick = () => {
+      const selectedIndex = parseInt(select.value, 10);
+      const selectedFormat = exportFormats[selectedIndex].split(' ')[0].toLowerCase(); // Extract format from selected option
+
+      let fileName = fileNameInput.value.trim();
+      if (fileName === '') {
+        fileName = defaultFileName; // Use default file name if empty
+      }
+
+      console.log('Selected format:', selectedFormat); // Add this line for debugging
+      console.log('File name:', fileName); // Add this line for debugging
+
+      switch (selectedFormat) {
+        case 'text':
+          // Logic to export as .txt
+          this.beatwriter.modePlay.exportAudio(fileName + '.mp3');
+          break;
+        case 'mp3':
+          // Logic to export as .mp3
+          this.beatwriter.modePlay.exportAudio(fileName + '.mp3');
+          break;
+        case 'wav':
+          // Logic to export as .wav
+          // You can add your logic here to trigger exporting as WAV
+          break;
+        default:
+          alert('Invalid export format selected.');
+      }
+
+      modal.style.display = 'none';
+      document.body.removeChild(modalContainer);
+    };
+  }
 }
 
-  console.log("controlPanel.js.loaded");
+console.log("controlPanel.js.loaded");

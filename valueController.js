@@ -11,7 +11,7 @@ class ValueController {
     this.lcdLightR = this.lcdContainer.querySelector("#lcd-light-r");
 
     this.bpmValue = {
-      value: this.controlPanel.beatwriter.currentBPM,
+      value: controlPanel.beatwriter.currentBPM,
       min: 0,
       max: 200,
       type: 'integer',
@@ -19,7 +19,7 @@ class ValueController {
     };
 
     this.ttsVoiceValue = {
-      value: this.controlPanel.beatwriter.modePlay.ttsSpeakingVoice,
+      value: controlPanel.beatwriter.modePlay.ttsSpeakingVoice,
       min: 1,
       max: 10,
       type: 'integer',
@@ -27,7 +27,7 @@ class ValueController {
     };
 
     this.ttsRateValue = {
-      value: this.controlPanel.beatwriter.modePlay.ttsSpeakingRate,
+      value: controlPanel.beatwriter.modePlay.ttsSpeakingRate,
       min: 1,
       max: 10,
       type: 'float',

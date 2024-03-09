@@ -44,11 +44,13 @@ console.log("the current voice is:" + selectedVoice);
     throw new Error('Text to convert is missing or empty.');
   }
 
-if (textToConvert === 'a'){
+if (textToConvert.toLowerCase() === 'a'){
    textToConvert = "uh";
+   console.log("changing a to uh");
 }
-if (textToConvert === "the"){
+if (textToConvert.toLowerCase() === "the"){
    textToConvert = "duh";
+   console.log("changing the to duh");
 }
 
   const apiUrl = `https://texttospeech.googleapis.com/v1/text:synthesize?key=${apiKey}`;
