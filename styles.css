@@ -192,7 +192,7 @@ body {
 }
 
 #title {
-    font-size: 12px;
+    font-size: 8px;
     text-shadow: 1px -1px 0 black;
     color: white;
     padding: 0px;
@@ -219,7 +219,7 @@ body {
 }
 
 .lcd-text-display {
-    font-family: 'Digital-7';
+    font-family: 'VT-323';
     background-color: black;
     color: #789F8A;
     padding: 0px;
@@ -233,7 +233,7 @@ body {
 line-height: 12px;
     border-radius: 3px;
     text-align: left;
-    width: 100%;
+    width: 130px;
     margin-right: 5px;
 }
 
@@ -246,7 +246,6 @@ line-height: 12px;
 
 #play-button {
     margin-right: 0;
-background-image: url('play-button.png');
 height: 40px;
 width: 40px;
 
@@ -255,7 +254,6 @@ width: 40px;
 
 #stop-button {
     margin-right: 0;
-background-image: url('stop-button.png');
 height: 40px;
 width: 40px;
 
@@ -267,9 +265,6 @@ width: 40px;
     flex-direction: row;
 }
 
-#beat-track-input {
-    width: 100px;
-}
 
 #beat-track-wave-view-container {
     position: relative;
@@ -556,7 +551,7 @@ width: 40px;
 
 .button {
     font-family: 'Orbitron';
-    font-size: 10px;
+    font-size: 7px;
     background-color: black;
     color: #fff;
     cursor: pointer;
@@ -591,11 +586,21 @@ width: 40px;
 .button-size-XS {
     height: 15px;
     width: 15px;
+}
+.button-size-XXS {
+    height: 7px;
+    width: 14px;
+}
 
+.button-size-XXSL {
+    height: 9px;
+    width: 33px;
+    padding-top: 0;
 }
 
 #console-panel {
     /* Your existing styles */
+    font-family: 'VT-323';
     font-size: 8px;
     height: 200px;
     display: flex;
@@ -611,10 +616,13 @@ width: 40px;
 
 .console-message {
     text-align: left;
-    font-family: 'VT-323';
+    }
+
+#auto-bpm-display{
+  width: 40px;
 
 }
-
+  
 
 #bottom-panel {
     align-items: center;
@@ -644,7 +652,7 @@ width: 40px;
 }
 
 .lcd-display {
-    font-family: 'Digital-7', sans-serif;
+    font-family: 'VT-323';
     background-color: black;
     cursor: pointer;
     font-size: 24px;
@@ -792,4 +800,23 @@ width: 40px;
 input[type="text"] {
     padding: 0;
     margin: 0;
+}
+
+.lcd-display-small{
+
+    font-family: 'VT-323';
+    background-color: black;
+    cursor: pointer;
+    font-size: 12px;
+    padding: 0;
+    color: #789F8A;
+    border-style: solid;
+    border-left-width: 1px;
+    border-bottom-width: 1px;
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-color: #ADD8E6;
+    text-align: right;
+    width: 20px; 
+    height: 20px;
 }

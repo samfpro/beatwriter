@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<title>SAMFPRO BEATWRITER</title>
+    <meta charset="UTF-8">
+    <title>SAMFPRO BEATWRITER</title>
 
 
-<link rel="stylesheet" href="styles.css"> <!-- Link to your existing stylesheet -->
+    <link rel="stylesheet" href="styles.css"> <!-- Link to your existing stylesheet -->
 </head>
 
 <body>
@@ -35,14 +36,31 @@
                     <div id="beat-track-input" class="lcd-text-display">Load a Track</div>
                     <div class="sub-container-row">
                         <div id="beat-track-load-button" class="load-button button button-size-S"></div>
-                        <div class='button button-size-S' id="auto-bpm-button">
+                        <div class='button button-size-S' id="auto-bpm-button"></div>
+<div id="auto-bpm-display" class="lcd-display-small"></div>
+                        
+<div class="sub-container-column">
+<div class="sub-container-row">
+                            <div class='button button-size-XXS' id="auto-bpm-x2-button">X2</div>
+                            <div class='button button-size-XXS' id="auto-bpm-half-button">/2</div></div>
+                       
+
+
+                            
+                            <div id="auto-bpm-commit-button" class="button button-size-XXSL">COMMIT</div>
                         </div>
 
+
+                        
                     </div>
-                </div>
-                <div class="sub-container-column">
+              </div>
+
+
+
+
+
                     <div id="bt-lcd-button" class="button button-size-S toggle-button"></div>
-                </div>
+
                 <div class="sub-container-grid lcd-selector">
                     <div class="label">OFFSET-MS</div>
                     <div class="label">LEADIN-BARS</div>
@@ -57,131 +75,130 @@
 
                 <div class="sub-container-column">
 
-                    <input id="bt-lcd-display" class="lcd-display" tabindex="0" role="textbox" aria-readonly="false">
+                    <input id="bt-lcd-display" class="lcd-display" tabindex="0" role="textbox" aria-readonly="false">      </div>
+
+                    <div class="up-down-btn-container">
+                        <div class="button lcd-up-btn lcd-up-down-btn button-size-XS" id="bt-lcd-up-btn">&#9650;</div>
+                        <div class="button lcd-up-down-btn lcd-down-btn button-size-XS" id="bt-lcd-down-btn">&#9660;</div>
+                    </div>
                 </div>
-                <div class="up-down-btn-container">
-                    <div class="button lcd-up-btn lcd-up-down-btn button-size-XS" id="bt-lcd-up-btn">&#9650;</div>
-                    <div class="button lcd-up-down-btn lcd-down-btn button-size-XS" id="bt-lcd-down-btn">&#9660;</div>
+          </div>
+
+
+            <div class="control-panel">
+                <div class="cp-section" id="beat-track-wave-view-container">
+                    <div class="cp-section-label">REGION:</div>
+                    <div class="waveform-view" id="beat-track-wave-view">
+                        <canvas id="waveform-canvas"></canvas>
+                        <canvas id="region-canvas"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="control-panel" id="middle-panel">
+                <div id="main-screen">
+                    <div id="start-marker-container"> </div>
+                    <div id="grid-container"> </div>
+                    <div id="end-marker-container"> </div>
+                </div>
+            </div>
+            <div class="control-panel" id="grid-tab-panel">
+                <div class="grid-tab grid-tab-active" id="grid-tab-01">01</div>
+                <div class="grid-tab" id="grid-tab-add">+</div>
+            </div>
+            <div class="control-panel" id="console-panel">starting console...</div>
+            <div class='control-panel' id="bottom-panel">
+                <div class="cp-section" id="mode-container">
+                    <div class="cp-section-label">MODE:</div>
+                    <div class="sub-container-column">
+                        <div id="mode-button" class="button button-size-S toggle-button"></div>
+                    </div>
+                    <div class="sub-container-grid lcd-selector">
+
+                        <div class="label">WRIT</div>
+                        <div class="label">ARNG</div>
+                        <div class="label">PLAY</div>
+                        <div class="lcd-selector-arrow-right"></div>
+                        <div class="lcd-selector-arrow-right"></div>
+                        <div class="lcd-selector-arrow-right"></div>
+                        <div id="light-mode-write" class="light mode-active"></div>
+                        <div id="light-mode-arrange" class="light"></div>
+                        <div id="light-mode-play" class="light"></div>
+                    </div>
+                </div>
+                <div class="cp-section" id="transport-container">
+                    <div class="cp-section-label">TRANSPORT:</div>
+                    <div id="play-button" class="button button-size-L"></div>
+                    <div id="stop-button" class="button button-size-L"></div>
+                </div>
+                <div class="cp-section" id="lcd-container">
+                    <div class="cp-section-label">BPM / TTS:</div>
+                    <div id="lcd-button" class="button button-size-S toggle-button"></div>
+
+                    <div class="sub-container-grid lcd-selector">
+                        <div class="label">BPM</div>
+                        <div class="label">VTYPE</div>
+                        <div class="label">VRATE</div>
+                        <div class="lcd-selector-arrow-right"></div>
+                        <div class="lcd-selector-arrow-right"></div>
+                        <div class="lcd-selector-arrow-right"></div>
+                        <div id="lcd-light-b" class="light mode-active"></div>
+                        <div id="lcd-light-v" class="light"> </div>
+                        <div id="lcd-light-r" class="light"></div>
+                    </div>
+                    <input id="lcd-display" class="lcd-display" tabindex="0" role="textbox" aria-readonly="true">
+                    <div class="up-down-btn-container">
+                        <div class="button lcd-up-btn lcd-up-down-btn button-size-XS" id="lcd-up-btn">&#9650;</div>
+                        <div class="button lcd-down-btn lcd-up-down-btn button-size-XS" id="lcd-down-btn">&#9660;</div>
+                    </div>
+
+                </div>
+                <div class="cp-section" id="metronome-container">
+                    <div class="cp-section-label">MTRNM:</div>
+                    <div id="metronome-light"></div>
+                    <div id="metronome-switch">
+                        <div id="metronome-switch-up" class="metronome-switch-position metronome-switch-position-active"></div>
+                        <div id="metronome-switch-down" class="metronome-switch-position"></div>
+                    </div>
+                </div>
+                <div class="cp-section" id="mixer-container">
+                    <div class="cp-section-label">MIXER:</div>
+                    <div class="fader-container">
+                        <div class="fader-label">BTRAK</div>
+                        <input type="range" min="0" max="100" value="75" class="fader" id="beat-track-fader">
+                    </div>
+                    <div class="fader-container">
+                        <div class="fader-label">MTRNM</div>
+                        <input type="range" min="0" max="100" value="75" class="fader" id="metronome-fader">
+                    </div>
+                    <div class="fader-container">
+                        <div class="fader-label">TTSVO</div>
+                        <input type="range" min="0" max="100" value="75" class="fader" id="tts-fader">
+                    </div>
+                    <div class="fader-container">
+                        <div class="fader-label">MASTR</div>
+                        <input type="range" min="0" max="100" value="75" class="fader" id="master-fader">
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="control-panel">
-            <div class="cp-section" id="beat-track-wave-view-container">
-                <div class="cp-section-label">REGION:</div>
-                <div class="waveform-view" id="beat-track-wave-view">
-                    <canvas id="waveform-canvas"></canvas>
-                    <canvas id="region-canvas"></canvas>
-                </div>
-            </div>
-        </div>
-
-        <div class="control-panel" id="middle-panel">
-            <div id="main-screen">
-                <div id="start-marker-container"> </div>
-                <div id="grid-container"> </div>
-                <div id="end-marker-container"> </div>
-            </div>
-        </div>
-        <div class="control-panel" id="grid-tab-panel">
-            <div class="grid-tab grid-tab-active" id="grid-tab-01">01</div>
-            <div class="grid-tab" id="grid-tab-add">+</div>
-        </div>
-        <div class="control-panel" id="console-panel">starting console...</div>
-        <div class='control-panel' id="bottom-panel">
-            <div class="cp-section" id="mode-container">
-                <div class="cp-section-label">MODE:</div>
-                <div class="sub-container-column">
-                    <div id="mode-button" class="button button-size-S toggle-button"></div>
-                </div>
-                <div class="sub-container-grid lcd-selector">
-
-                    <div class="label">WRIT</div>
-                    <div class="label">ARNG</div>
-                    <div class="label">PLAY</div>
-                    <div class="lcd-selector-arrow-right"></div>
-                    <div class="lcd-selector-arrow-right"></div>
-                    <div class="lcd-selector-arrow-right"></div>
-                    <div id="light-mode-write" class="light mode-active"></div>
-                    <div id="light-mode-arrange" class="light"></div>
-                    <div id="light-mode-play" class="light"></div>
-                </div>
-            </div>
-            <div class="cp-section" id="transport-container">
-                <div class="cp-section-label">TRANSPORT:</div>
-                <div id="play-button" class="button button-size-L"></div>
-                <div id="stop-button" class="button button-size-L"></div>
-            </div>
-            <div class="cp-section" id="lcd-container">
-                <div class="cp-section-label">BPM / TTS:</div>
-                <div id="lcd-button" class="button button-size-S toggle-button"></div>
-
-                <div class="sub-container-grid lcd-selector">
-                    <div class="label">BPM</div>
-                    <div class="label">VTYPE</div>
-                    <div class="label">VRATE</div>
-                    <div class="lcd-selector-arrow-right"></div>
-                    <div class="lcd-selector-arrow-right"></div>
-                    <div class="lcd-selector-arrow-right"></div>
-                    <div id="lcd-light-b" class="light mode-active"></div>
-                    <div id="lcd-light-v" class="light"> </div>
-                    <div id="lcd-light-r" class="light"></div>
-                </div>
-                <input id="lcd-display" class="lcd-display" tabindex="0" role="textbox" aria-readonly="true">
-                <div class="up-down-btn-container">
-                    <div class="button lcd-up-btn lcd-up-down-btn button-size-XS" id="lcd-up-btn">&#9650;</div>
-                    <div class="button lcd-down-btn lcd-up-down-btn button-size-XS" id="lcd-down-btn">&#9660;</div>
-                </div>
-
-            </div>
-            <div class="cp-section" id="metronome-container">
-                <div class="cp-section-label">MTRNM:</div>
-                <div id="metronome-light"></div>
-                <div id="metronome-switch">
-                    <div id="metronome-switch-up" class="metronome-switch-position metronome-switch-position-active"></div>
-                    <div id="metronome-switch-down" class="metronome-switch-position"></div>
-                </div>
-            </div>
-            <div class="cp-section" id="mixer-container">
-                <div class="cp-section-label">MIXER:</div>
-                <div class="fader-container">
-                    <div class="fader-label">BTRAK</div>
-                    <input type="range" min="0" max="100" value="75" class="fader" id="beat-track-fader">
-                </div>
-                <div class="fader-container">
-                    <div class="fader-label">MTRNM</div>
-                    <input type="range" min="0" max="100" value="75" class="fader" id="metronome-fader">
-                </div>
-                <div class="fader-container">
-                    <div class="fader-label">TTSVO</div>
-                    <input type="range" min="0" max="100" value="75" class="fader" id="tts-fader">
-                </div>
-                <div class="fader-container">
-                    <div class="fader-label">MASTR</div>
-                    <input type="range" min="0" max="100" value="75" class="fader" id="master-fader">
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script src="Js/embedSVG.js"></script>
-    <script src="Js/parameterValue.js"></script>
-    <script src="Js/constants.js"></script>
-    <script src="Js/cell.js"></script>
-    <script src="Js/gridView.js"></script>
-    <script src="Js/getSyllables.js"></script>
-    <script src="Js/modeWrite.js"></script>
-    <script src="Js/modeArrange.js"></script>
-    <script src="Js/modePlay.js"></script>
-    <script src="Js/fileManager.js"></script>
-    <script src="Js/textToAudioBlob.js"></script>
-    <script src="Js/bpmCalculator.js"></script>
-    <script src="Js/controlPanel.js"></script>
-    <script src="Js/valueSelector.js"></script>
-    <script src="Js/waveFormView.js"></script>
-    <script src="Js/beatWriter.js"></script>
-</body>
-
-</html>
+        <script src="Js/fft.js"></script>
+        <script src="Js/embedSVG.js"></script>
+        <script src="Js/parameterValue.js"></script>
+        <script src="Js/constants.js"></script>
+        <script src="Js/cell.js"></script>
+        <script src="Js/gridView.js"></script>
+        <script src="Js/getSyllables.js"></script>
+        <script src="Js/modeWrite.js"></script>
+        <script src="Js/modeArrange.js"></script>
+        <script src="Js/modePlay.js"></script>
+        <script src="Js/fileManager.js"></script>
+        <script src="Js/textToAudioBlob.js"></script>
+        <script src="Js/bpmCalculator.js"></script>
+        <script src="Js/controlPanel.js"></script>
+        <script src="Js/valueSelector.js"></script>
+        <script src="Js/waveFormView.js"></script>
+        <script src="Js/beatWriter.js"></script>
 </body>
 
 </html>
