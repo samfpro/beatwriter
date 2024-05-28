@@ -20,7 +20,7 @@
 /* Remove default styles */
 input[type="range"] {
     -webkit-appearance: slider;
-    appearance: none;
+    appearance: none;iiiii
     background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0));
     /* Set background color */
     outline: none;
