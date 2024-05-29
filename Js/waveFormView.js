@@ -1,28 +1,29 @@
 class WaveFormView {
     constructor(beatwriter) {
         this.beatwriter = beatwriter;
-        this.audioFile = this.beatwriter.beatTrack;
+        console.log(beatwriter.beatTrack);
+        this.audioFile = beatwriter.beatTrack;
         this.waveformCanvas = document.getElementById('waveform-canvas');
         this.regionCanvas = document.getElementById('region-canvas');
         this.waveformCtx = this.waveformCanvas.getContext('2d');
         this.regionCtx = this.regionCanvas.getContext('2d');
         this.audioDurationInSeconds = 0;
         this.ac = beatwriter.ac;
-        this.drawWaveForm(this.audioFile);
+        this.drawWaveForm(beatwriter.beatTrack);
     }
 
     drawWaveForm(audioFile) {
         
-   console.log("drawing waveform for" + audioFile);
+    this.audioFile = audioFile;
+    console.log("drawing waveform for" + this.audioFile.fileName);
         const canvasWidth = this.waveformCanvas.width;
         const canvasHeight = this.waveformCanvas.height;
-        this.audioFile = audioFile;
        
 
         (async () => {
             try {
          console.log("fetching audioFile for drawing");       
-         const response = await fetch(this.audioFile);
+         const response = await fetch(this.audioFile.fileUrl);
          console.log("gotem." + response);       
                 
          console.log("awaiting array buffer for drawing");       

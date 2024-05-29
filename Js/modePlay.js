@@ -158,7 +158,7 @@ if (this.beatwriter.beatTrackOffsetMS.currentValue !== 0) {
 
         try {
           console.log("awaiting fetch response");
-          const response = await fetch(this.beatwriter.beatTrack);
+          const response = await fetch(this.beatwriter.beatTrack.fileUrl);
           console.log(response);
           console.log("setting arrayBuffer");
           const btArrayBuffer = await response.arrayBuffer();

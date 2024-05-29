@@ -16,7 +16,10 @@ class Beatwriter {
     this.metronomeOn = true;
     this.isPlaying = false;
     this.previousMode = '';
-    this.beatTrack = "BeatTrack/Turtletuck_83BPM.mp3";
+     this.beatTrack = {
+      fileUrl: "BeatTrack/Turtletuck_83BPM.mp3",
+      fileName: "Turtletuck_83BPM"
+    };
     this.ac = new AudioContext();
     console.log("Creating modeArrange at...");
     this.modeArrange = new ModeArrange(this);
@@ -45,7 +48,7 @@ this.beatTrackOffsetMS = new ParameterValue('beatTrackOffsetMS', 0, 0, 2000, 'in
     this.beatTrackParameterValues = [this.beatTrackOffsetMS, this.beatTrackLeadInBars, this.beatTrackRate];
     console.log("Creating WaveFormView instance...");
 this.waveFormView = new WaveFormView(this);
-    console.log("waveFormView initialized:", this.waveFormView);
+    console.log("waveFormView initialized:" + this.waveFormView);
 this.waveFormView.drawRegions();
 console.log("Initialization success!");
 

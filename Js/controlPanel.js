@@ -214,28 +214,34 @@ handleModeButtonClick() {
 
   }
 
-  async handleBeatTrackLoadButtonClick() {
-const fileInfo = await this.beatwriter.fileManager.loadBeatTrack();
-const fileName = fileInfo.fileName + '.' + fileInfo.fileExtension;
-this.beatwriter.beatTrack = fileName;
-this.updateDisplays();
+async handleBeatTrackLoadButtonClick() {
+  try {
+    const fileInfo = await this.beatwriter.fileManager.loadBeatTrack();
+    this.beatwriter.beatTrack = {
+      fileUrl: fileInfo.fileUrl,
+      fileName: fileInfo.fileName
+    };
+    this.updateDisplays();
 
-this.beatwriter.waveFormView.drawWaveForm(fileName);
-
+    this.beatwriter.waveFormView.drawWaveForm(this.beatwriter.beatTrack); // Use the URL for drawing waveform
+    console.log("Beat track loaded:" + this.beatwriter.beatTrack.fileName);
+  } catch (error) {
+    console.error('Error loading beat track:' + error);
   }
+}
   
 
 async handleAutoBpmButtonClick() {
 
 
-this.calculator.calculateBpm(this.beatwriter.beatTrack)
+this.calculator.calculateBpm(this.beatwriter.beatTrack.fileUrl)
   .then(bpm => {
     console.log(`BPM: ${bpm}`);
     this.autoBpm = bpm;
     this.updateDisplays();
   })
   .catch(error => {
-    console.error('Error:', error);
+    console.error('Error:' + error);
   });
 }
 
@@ -272,7 +278,7 @@ this.calculator.calculateBpm(this.beatwriter.beatTrack)
 
   updateDisplays() {
 
-    this.beatTrackInput.textContent = this.beatwriter.beatTrack;
+    this.beatTrackInput.textContent = this.beatwriter.beatTrack.fileName;
 
     this.projectNameInput.textContent = this.beatwriter.projectName;
 
@@ -280,7 +286,7 @@ this.calculator.calculateBpm(this.beatwriter.beatTrack)
 
     this.playValueSelector.updateDisplay();
     this.beatTrackValueSelector.updateDisplay();
-this.beatwriter.waveFormView.drawWaveForm();
+this.beatwriter.waveFormView.drawWaveForm(this.beatwriter.beatTrack);
 
 
 
@@ -293,7 +299,7 @@ this.beatwriter.waveFormView.drawWaveForm();
 
     // Create select element for export format
     const select = document.createElement('select');
-    console.log('Select element created:', select); // Add this line for debugging
+    console.log('Select element created:' + select); // Add this line for debugging
     exportFormats.forEach((format, index) => {
       const option = document.createElement('option');
       option.value = index;
@@ -305,7 +311,7 @@ this.beatwriter.waveFormView.drawWaveForm();
     const fileNameInput = document.createElement('input');
     fileNameInput.type = 'text';
     fileNameInput.value = defaultFileName;
-    console.log('File name input element created:', fileNameInput); // Add this line for debugging
+    console.log('File name input element created:' + fileNameInput); // Add this line for debugging
 
     // Create container for select and input elements
     const container = document.createElement('div');
@@ -357,7 +363,7 @@ this.beatwriter.waveFormView.drawWaveForm();
       }
 
       console.log('Selected format:', selectedFormat); // Add this line for debugging
-      console.log('File name:', fileName); // Add this line for debugging
+      console.log('File name:' + fileName); // Add this line for debugging
 
       switch (selectedFormat) {
         case 'text':

@@ -142,24 +142,22 @@ saveToFile(fileName) {
     this.beatwriter.controlPanel.updateDisplays();
   }
 
-async loadBeatTrack() {
+ loadBeatTrack() {
     return new Promise((resolve, reject) => {
-        const fileInput = document.createElement('input');
-        fileInput.type = 'file';
-        fileInput.accept = 'audio/mpeg'; // Accept only mp3 files
-        fileInput.onchange = (event) => {
-            const file = event.target.files[0];
-            if (file) {
-                const fileName = file.name;
-                const fileExtension = fileName.split('.').pop().toLowerCase(); // Extract file extension
-                const fileNameWithoutExtension = 'BeatTrack/' + fileName.substring(0, fileName.lastIndexOf('.')); // Add "BeatTrack/" before the file name
-                // Resolve the promise with the file name and extension
-                resolve({ fileName: fileNameWithoutExtension, fileExtension: fileExtension }); 
-            } else {
-                reject('No file selected');
-            }
-        };
-        fileInput.click();
+      const fileInput = document.createElement('input');
+      fileInput.type = 'file';
+      fileInput.accept = 'audio/*,.mp3,.wav,.ogg'; // Accept common audio file types
+      fileInput.onchange = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+          const fileUrl = URL.createObjectURL(file);
+          const fileName = file.name;
+          resolve({ fileUrl, fileName });
+        } else {
+          reject('No file selected');
+        }
+      };
+      fileInput.click();
     });
-}
+  }
 }
