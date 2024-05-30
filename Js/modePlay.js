@@ -237,7 +237,7 @@ console.log("beatTrackNode is connected to this.beatTrackGain" );
     console.log("set the ttsSource");
     ttsSource.connect(this.ttsGain);
     ttsSource.start(time);
-    ttsSource.stop(time + (this.stepDuration * 2));
+    ttsSource.stop(time + (this.stepDuration * 4));
 
     console.log(`Scheduled TTS playback at ${time}s.`);
   }
