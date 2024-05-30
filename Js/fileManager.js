@@ -120,7 +120,7 @@ saveToFile(fileName) {
   loadFromFile() {
     const input = document.createElement('input');
     input.type = 'file';
-    input.accept = '.txt';
+    input.accept = '.json';
     input.onchange = (event) => {
       const file = event.target.files[0];
       if (file) {
