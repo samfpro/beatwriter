@@ -197,9 +197,11 @@ handleModeButtonClick() {
       this.beatwriter.mode = 'play';
       this.updateModeDisplay();
       await this.beatwriter.modePlay.start();
+      
     } else {
       await this.beatwriter.modePlay.stopSequencer();
       console.log("cp handled play button click");
+
     }
   }
 

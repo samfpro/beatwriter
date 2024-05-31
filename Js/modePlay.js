@@ -1,3 +1,4 @@
+
 class ModePlay {
   constructor(beatwriter) {
     this.beatwriter = beatwriter;
@@ -65,68 +66,55 @@ class ModePlay {
     this.masterGain.gain.setValueAtTime(1, this.ac.currentTime);
   }
 
-async schedulePlayback() {
-  console.log("scheduling playback");
+  async schedulePlayback() {
+    console.log("scheduling playback");
 
-  const stepsToPlay = this.beatwriter.endMarkerPosition - this.beatwriter.startMarkerPosition;
-  console.log("the number of steps to play is: " + stepsToPlay);
+    const stepsToPlay = this.beatwriter.endMarkerPosition - this.beatwriter.startMarkerPosition;
+    console.log("the number of steps to play is: " + stepsToPlay);
 
-  this.stepDuration = 60 / (this.beatwriter.bpm.currentValue * 4);
-  this.playbackDuration = stepsToPlay * this.stepDuration;
+    this.stepDuration = 60 / (this.beatwriter.bpm.currentValue * 4);
+    this.playbackDuration = stepsToPlay * this.stepDuration;
 
-  let startTime = this.ac.currentTime + (16 * this.stepDuration);
-  console.log("this.beatwriter.startMarkerPosition:" + typeof this.beatwriter.startMarkerPosition + this.beatwriter.startMarkerPosition);
-  console.log("this.beatwriter.beatTrackLeadInBars.currentValue:" + typeof this.beatwriter.beatTrackLeadInBars.currentValue + this.beatwriter.beatTrackLeadInBars.currentValue);
-  console.log("this.beatwriter.beatTrackOffsetMS.currentValue:" + typeof this.beatwriter.beatTrackOffsetMS.currentValue + this.beatwriter.beatTrackOffsetMS.currentValue);
-  console.log("this.stepDuration:" + typeof this.stepDuration + this.stepDuration);
-
-  let beatTrackOffsetS = 0;
-
-  if (this.beatwriter.startMarkerPosition !== 0 || this.beatwriter.beatTrackLeadInBars.currentValue !== 0) {
-    beatTrackOffsetS = (this.beatwriter.startMarkerPosition + (this.beatwriter.beatTrackLeadInBars.currentValue * 16)) * this.stepDuration;
-  }
-
-  if (this.beatwriter.beatTrackOffsetMS.currentValue !== 0) {
-    beatTrackOffsetS += this.beatwriter.beatTrackOffsetMS.currentValue / 1000;
-  }
-
-  console.log(beatTrackOffsetS);
-
-  let beatTrackStartTime = startTime;
-
-  if (this.beatwriter.startMarkerPosition === 0 && this.beatwriter.beatTrackLeadInBars.currentValue === 0) {
-    beatTrackStartTime = startTime;  // No additional delay if starting from the very beginning
-  }
-
-  const beatTrackNode = await this.createBeatTrack();
-  console.log("beatTrackNode returned!! attempting to schedule");
-  await this.scheduleBeatTrack(beatTrackNode, beatTrackStartTime, beatTrackOffsetS);
-
-  for (let step = this.beatwriter.startMarkerPosition; step < this.beatwriter.endMarkerPosition + 1; step++) {
-    const time = startTime + (step - this.beatwriter.startMarkerPosition) * this.stepDuration;
-
-    if (step === this.beatwriter.endMarkerPosition) {
-      this.hideCursor(step - 1, time);
-      return;
+    let startTime = this.ac.currentTime + (4 * this.stepDuration);
+    let endTime = startTime + this.playbackDuration;
+this.hideCursor(this.beatwriter.endMarkerPosition-1, endTime);
+    let beatTrackOffsetS = 0;
+    if (this.beatwriter.startMarkerPosition !== 0 || this.beatwriter.beatTrackLeadInBars.currentValue !== 0) {
+      beatTrackOffsetS = (this.beatwriter.startMarkerPosition + (this.beatwriter.beatTrackLeadInBars.currentValue * 16)) * this.stepDuration;
+    }
+    if (this.beatwriter.beatTrackOffsetMS.currentValue !== 0) {
+      beatTrackOffsetS += this.beatwriter.beatTrackOffsetMS.currentValue / 1000;
     }
 
-    if (this.beatwriter.metronomeOn) {
-      if ((step + 2) % 2 === 0) {
-        this.scheduleOsc(this.sineNodes[step], "sine", this.sineGain, time);
-      }
-      if ((step + 4) % 8 === 0) {
-        this.scheduleOsc(this.sawNodes[step], "saw", this.sawGain, time);
+    let beatTrackStartTime = startTime;
+    if (this.beatwriter.startMarkerPosition === 0 && this.beatwriter.beatTrackLeadInBars.currentValue === 0) {
+      beatTrackStartTime = startTime;
+    }
+
+    const beatTrackNode = await this.createBeatTrack();
+    await this.scheduleBeatTrack(beatTrackNode, beatTrackStartTime, beatTrackOffsetS);
+
+    for (let step = this.beatwriter.startMarkerPosition; step <= this.beatwriter.endMarkerPosition; step++) {
+      const time = startTime + (step - this.beatwriter.startMarkerPosition) * this.stepDuration;
+
+      if (step >= 0 && step < this.beatwriter.cells.length) {
+        if (this.beatwriter.metronomeOn) {
+          if ((step + 2) % 2 === 0) {
+            this.scheduleOsc(this.sineNodes[step], "sine", this.sineGain, time);
+          }
+          if ((step + 4) % 8 === 0) {
+            this.scheduleOsc(this.sawNodes[step], "saw", this.sawGain, time);
+          }
+        }
+        if (this.beatwriter.cells[step].syllable !== "") {
+          this.scheduleTts(time, this.beatwriter.cells[step].syllable);
+        }
+        this.showCursor(step, time);
+      } else {
+        console.error("Attempted to access step out of bounds: " + step);
       }
     }
-
-    if (this.beatwriter.cells[step].syllable !== "") {
-      this.scheduleTts(time, this.beatwriter.cells[step].syllable);
-    }
-
-    this.showCursor(step, time);
   }
-}
-
 
   async scheduleOsc(node, type, gainNode, time) {
     node = this.ac.createOscillator();
@@ -281,7 +269,6 @@ async schedulePlayback() {
 
     // Reset the mode
     this.beatwriter.mode = this.beatwriter.previousMode;
-    this.beatwriter.previousMode = this.beatwriter.mode;
     this.beatwriter.controlPanel.updateModeDisplay();
     console.log("Sequencer stopped and cursor reset.");
   }
@@ -359,15 +346,7 @@ async schedulePlayback() {
   }
 }
 
-async function textToAudioBlob(text, rate, voice) {
-  // Placeholder for the actual text-to-speech API call
-  // This function should return a Blob containing the audio data
-  // Example:
-  // return new Blob([audioData], { type: 'audio/wav' });
-}
 
-// Assuming that beatwriter is defined somewhere in your code
-const modePlay = new ModePlay(beatwriter);
 
 // Example usage:
 // modePlay.start();

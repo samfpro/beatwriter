@@ -89,9 +89,9 @@ class GridView {
 
   updateGrid() {
     if (this.beatwriter.mode === 'play') {
-      for (let i = this.beatwriter.startMarkerPosition; i < this.beatwriter.endMarkerPosition + 1; i++) {
+      for (let i = this.beatwriter.startMarkerPosition; i < this.beatwriter.endMarkerPosition; i++) {
 
-        if (this.beatwriter.cells[i].stepPlaying) {
+        if (this.beatwriter.cells[i].stepPlaying == true) {
           console.log("setting cell " + i + " to stepPlaying");
           this.gridCells[i].classList.add('step-playing');
 
