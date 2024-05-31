@@ -10,6 +10,13 @@
 </head>
 
 <body>
+
+
+<div id="progress-indicator" style="display: none;">
+  <div class="spinner"></div>
+  <p>Loading audio...</p>
+</div>
+
     <div id="beatwriter-container">
         <div class="control-panel" id="top-panel">
             <div class="cp-section" id="title-container">
@@ -102,10 +109,10 @@
                     <div id="end-marker-container"> </div>
                 </div>
             </div>
-            <div class="control-panel" id="grid-tab-panel">
+            <!--<div class="control-panel" id="grid-tab-panel">
                 <div class="grid-tab grid-tab-active" id="grid-tab-01">01</div>
                 <div class="grid-tab" id="grid-tab-add">+</div>
-            </div>
+            </div>-->
             <div class="control-panel" id="console-panel">starting console...</div>
             <div class='control-panel' id="bottom-panel">
                 <div class="cp-section" id="mode-container">
@@ -182,6 +189,7 @@
                 </div>
             </div>
         </div>
+<script src="https://cdn.jsdelivr.net/npm/realtime-bpm-analyzer@1.0.3/dist/realtime-bpm-analyzer.min.js"></script>
         <script src="Js/fft.js"></script>
         <script src="Js/embedSVG.js"></script>
         <script src="Js/parameterValue.js"></script>
