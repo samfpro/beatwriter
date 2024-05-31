@@ -20,7 +20,7 @@
 /* Remove default styles */
 input[type="range"] {
     -webkit-appearance: slider;
-    appearance: none;iiiii
+    appearance: none;
     background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0));
     /* Set background color */
     outline: none;
@@ -84,6 +84,23 @@ body {
     border-right-width: 1px;
     border-color: #6C8EBF;
 }
+
+
+
+.spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 
 .control-panel {
     gap: 1px;
@@ -768,10 +785,10 @@ width: 40px;
 
 .fader-label {
     width: 40px;
-    height: 7px;
+    height: 9px;
     font-size: 7px;
     background-color: black;
-    transform: rotate(90deg) translateY(5px);
+    transform: rotate(90deg) translateY(0px);
     position: absolute;
 
 }
