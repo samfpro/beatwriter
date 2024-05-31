@@ -14,6 +14,7 @@ class ControlPanel {
     this.lightModeArrange = document.getElementById('light-mode-arrange');
     this.speakingRateSlider = document.getElementById('speaking-rate-slider');
     this.playButton = document.getElementById('play-button');
+    this.stopButton = document.getElementById('stop-button');
     this.gridCells = document.querySelectorAll('.grid-cell');
     this.startMarkers = document.querySelectorAll(".start-marker");
     this.endMarkers = document.querySelectorAll(".end-marker");
@@ -73,6 +74,7 @@ this.calculator = new BpmCalculator();
 
     this.modeButton.addEventListener('click', () => this.handleModeButtonClick());
     this.playButton.addEventListener('click', () => this.handlePlayButtonClick());
+    this.stopButton.addEventListener('click', () => this.handleStopButtonClick());
     this.saveButton.addEventListener('click', () => this.handleSaveButtonClick());
     this.loadButton.addEventListener('click', () => this.handleLoadButtonClick());
     this.importButton.addEventListener('click', () => this.handleImportButtonClick());
@@ -200,6 +202,10 @@ handleModeButtonClick() {
       console.log("cp handled play button click");
     }
   }
+
+  handleStopButtonClick() {
+      this.beatwriter.modePlay.stopSequencer();
+}
 
   handleLoadButtonClick() {
     this.beatwriter.fileManager.loadFromFile();
