@@ -225,6 +225,7 @@ handleModeButtonClick() {
 async handleBeatTrackLoadButtonClick() {
   try {
     const fileInfo = await this.beatwriter.fileManager.loadBeatTrack();
+    this.beatwriter.modePlay.beatTrackBuffer = null;
     this.beatwriter.beatTrack = {
       fileUrl: fileInfo.fileUrl,
       fileName: fileInfo.fileName
