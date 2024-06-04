@@ -21,7 +21,7 @@ async function getSyllables(word) {
         console.log(lines[i]);
     }
 
-    const trimmedWord = word.trim().toLowerCase(); // Trim and lowercase the word for case-insensitive comparison
+    let trimmedWord = word.trim().toLowerCase(); // Trim and lowercase the word for case-insensitive comparison
     console.log("Searching for word: " + trimmedWord);
 
     for (const line of lines) {
@@ -33,6 +33,17 @@ async function getSyllables(word) {
                 console.log("Word found in file: " + word + " with syllables: " + syllableArray);
                 return syllableArray;
             }
+        }
+    }
+
+    // If word ends with 's', remove the 's' and look it up again
+    if (trimmedWord.endsWith('s')) {
+        trimmedWord = trimmedWord.slice(0, -1); // Remove the last character ('s')
+        console.log("Word ends with 's', retrying without 's': " + trimmedWord);
+        const syllableArray = await getSyllables(trimmedWord);
+        if (syllableArray.length > 0) {
+            syllableArray[syllableArray.length - 1] += 's'; // Add 's' to the last syllable
+            return syllableArray;
         }
     }
 
