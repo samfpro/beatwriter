@@ -29,7 +29,8 @@ class FileManager {
           minValue: parameter.minValue,
           maxValue: parameter.maxValue,
           type: parameter.type
-        }))
+        })),
+        bpm: this.beatwriter.bpm // Save the bpm value
       };
       const jsonData = JSON.stringify(projectData);
       localStorage.setItem('beatwriterData', jsonData);
@@ -64,7 +65,8 @@ class FileManager {
           minValue: parameter.minValue,
           maxValue: parameter.maxValue,
           type: parameter.type
-        }))
+        })),
+        bpm: this.beatwriter.bpm // Save the bpm value
       };
       const jsonData = JSON.stringify(projectData);
       this.downloadFile(fileName + ".json", jsonData);
@@ -78,9 +80,14 @@ class FileManager {
       const storedData = localStorage.getItem('beatwriterData');
       if (storedData) {
         const projectData = JSON.parse(storedData);
+        console.log("Project data loaded: " + JSON.stringify(projectData));
+        
         this.beatwriter.projectName = projectData.projectName;
         this.beatwriter.beatTrack = projectData.beatTrack;
         this.beatwriter.cells = projectData.cells.map(cellData => new Cell(cellData));
+        this.beatwriter.bpm = projectData.bpm || 120; // Assign bpm with default value if not present
+        console.log("BPM loaded: " + this.beatwriter.bpm);
+
         // Assign play parameter values
         projectData.playParameterValues.forEach(parameterData => {
           const parameter = this.beatwriter.playParameterValues.find(p => p.name === parameterData.name);
@@ -91,6 +98,7 @@ class FileManager {
             parameter.type = parameterData.type;
           }
         });
+
         // Assign beat track parameter values
         projectData.beatTrackParameterValues.forEach(parameterData => {
           const parameter = this.beatwriter.beatTrackParameterValues.find(p => p.name === parameterData.name);
@@ -101,6 +109,7 @@ class FileManager {
             parameter.type = parameterData.type;
           }
         });
+
         this.beatwriter.gridView.updateGrid();
         this.beatwriter.controlPanel.updateDisplays();
         console.log("Loaded state from local storage");
@@ -139,10 +148,41 @@ class FileManager {
   }
 
   loadDataFromJSON(jsonData) {
-    const data = JSON.parse(jsonData);
-    Object.assign(this.beatwriter, data);
-    this.beatwriter.gridView.updateGrid();
-    this.beatwriter.controlPanel.updateDisplays();
+    try {
+      const data = JSON.parse(jsonData);
+      console.log("Data loaded from JSON: " + JSON.stringify(data));
+
+      this.beatwriter.projectName = data.projectName;
+      this.beatwriter.beatTrack = data.beatTrack;
+      this.beatwriter.cells = data.cells.map(cellData => new Cell(cellData));
+      this.beatwriter.bpm = data.bpm || 120; // Assign bpm with default value if not present
+
+      data.playParameterValues.forEach(parameterData => {
+        const parameter = this.beatwriter.playParameterValues.find(p => p.name === parameterData.name);
+        if (parameter) {
+          parameter.currentValue = parameterData.value;
+          parameter.minValue = parameterData.minValue;
+          parameter.maxValue = parameterData.maxValue;
+          parameter.type = parameterData.type;
+        }
+      });
+
+      data.beatTrackParameterValues.forEach(parameterData => {
+        const parameter = this.beatwriter.beatTrackParameterValues.find(p => p.name === parameterData.name);
+        if (parameter) {
+          parameter.currentValue = parameterData.value;
+          parameter.minValue = parameterData.minValue;
+          parameter.maxValue = parameterData.maxValue;
+          parameter.type = parameterData.type;
+        }
+      });
+
+      this.beatwriter.gridView.updateGrid();
+      this.beatwriter.controlPanel.updateDisplays();
+      console.log("State loaded from JSON file");
+    } catch (error) {
+      console.error("Error loading data from JSON: " + error);
+    }
   }
 
   loadBeatTrack() {
