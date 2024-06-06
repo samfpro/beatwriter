@@ -114,7 +114,6 @@ this.lightArray[this.currentIndex].classList.add("mode-active");
         this.gridView.updateGrid();
         console.log("updating display yeah.");
         this.lcdDisplay.value = this.activeValue.currentValue;
-        this.fileManager.saveToLocalStorage();
      this.lightArray[this.currentIndex].classList.add("mode-active");
 
     }

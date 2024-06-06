@@ -152,7 +152,6 @@ class GridView {
         cellElement.contentEditable = false;
       }
     }
-    this.beatwriter.fileManager.saveToLocalStorage();
     console.log("grid updated succesfully.");
   }
 

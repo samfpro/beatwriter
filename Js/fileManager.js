@@ -1,8 +1,7 @@
 class FileManager {
   constructor(beatwriter) {
     this.beatwriter = beatwriter;
-    this.loadFromLocalStorage(); // Load state on initialization
-    this.startAutoSave(); // Start auto-save with a default interval of 30 seconds
+    this.autoSaveInterval = null; // Declare autoSaveInterval in the constructor
   }
 
   saveToLocalStorage() {
@@ -34,8 +33,9 @@ class FileManager {
       };
       const jsonData = JSON.stringify(projectData);
       localStorage.setItem('beatwriterData', jsonData);
+      console.log("Auto-saved to local storage at " + new Date().toLocaleString());
     } catch (error) {
-      console.error("Error saving to local storage:" + error);
+      console.error("Error saving to local storage: " + error);
     }
   }
 
@@ -69,7 +69,7 @@ class FileManager {
       const jsonData = JSON.stringify(projectData);
       this.downloadFile(fileName + ".json", jsonData);
     } catch (error) {
-      console.error("Error saving to file:" + error);
+      console.error("Error saving to file: " + error);
     }
   }
 
@@ -103,9 +103,10 @@ class FileManager {
         });
         this.beatwriter.gridView.updateGrid();
         this.beatwriter.controlPanel.updateDisplays();
+        console.log("Loaded state from local storage");
       }
     } catch (error) {
-      console.error("Error loading from local storage:" + error);
+      console.error("Error loading from local storage: " + error);
     }
   }
 
@@ -173,5 +174,10 @@ class FileManager {
     if (this.autoSaveInterval) {
       clearInterval(this.autoSaveInterval);
     }
+  }
+
+  start() {
+    this.loadFromLocalStorage(); // Load state
+    this.startAutoSave(); // Start auto-save after loading
   }
 }

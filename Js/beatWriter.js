@@ -52,6 +52,7 @@ class Beatwriter {
     this.controlPanel = new ControlPanel(this, this.playParameterValues, this.beatTrackParameterValues);
     console.log("controlPanel initialized:", this.controlPanel);
     this.controlPanel.updateDisplays();
+
   }
 
   calculateMaxValues() {
@@ -84,4 +85,4 @@ const beatwriter = new Beatwriter();
 beatwriter.calculateMaxValues();
 beatwriter.controlPanel.playValueSelector.updateDisplay();
 beatwriter.controlPanel.beatTrackValueSelector.updateDisplay();
-beatwriter.fileManager.loadFromLocalStorage();
+beatwriter.fileManager.start();
