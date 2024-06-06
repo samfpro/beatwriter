@@ -1,75 +1,77 @@
 class FileManager {
   constructor(beatwriter) {
     this.beatwriter = beatwriter;
+    this.loadFromLocalStorage(); // Load state on initialization
+    this.startAutoSave(); // Start auto-save with a default interval of 30 seconds
   }
 
-saveToLocalStorage() {
+  saveToLocalStorage() {
     try {
-        const projectData = {
-            projectName: this.beatwriter.projectName,
-            beatTrack: this.beatwriter.beatTrack,
-            cells: this.beatwriter.cells.map(cell => ({
-                uniqueId: cell.uniqueId,
-                syllable: cell.syllable,
-                isCandidate: cell.isCandidate,
-                stepPlaying: cell.stepPlaying,
-                isPlayable: cell.isPlayable
-            })),
-            playParameterValues: this.beatwriter.playParameterValues.map(parameter => ({
-                name: parameter.name,
-                value: parameter.currentValue,
-                minValue: parameter.minValue,
-                maxValue: parameter.maxValue,
-                type: parameter.type
-            })),
-            beatTrackParameterValues: this.beatwriter.beatTrackParameterValues.map(parameter => ({
-                name: parameter.name,
-                value: parameter.currentValue,
-                minValue: parameter.minValue,
-                maxValue: parameter.maxValue,
-                type: parameter.type
-            }))
-        };
-        const jsonData = JSON.stringify(projectData);
-        localStorage.setItem('beatwriterData', jsonData);
+      const projectData = {
+        projectName: this.beatwriter.projectName,
+        beatTrack: this.beatwriter.beatTrack,
+        cells: this.beatwriter.cells.map(cell => ({
+          uniqueId: cell.uniqueId,
+          syllable: cell.syllable,
+          isCandidate: cell.isCandidate,
+          stepPlaying: cell.stepPlaying,
+          isPlayable: cell.isPlayable
+        })),
+        playParameterValues: this.beatwriter.playParameterValues.map(parameter => ({
+          name: parameter.name,
+          value: parameter.currentValue,
+          minValue: parameter.minValue,
+          maxValue: parameter.maxValue,
+          type: parameter.type
+        })),
+        beatTrackParameterValues: this.beatwriter.beatTrackParameterValues.map(parameter => ({
+          name: parameter.name,
+          value: parameter.currentValue,
+          minValue: parameter.minValue,
+          maxValue: parameter.maxValue,
+          type: parameter.type
+        }))
+      };
+      const jsonData = JSON.stringify(projectData);
+      localStorage.setItem('beatwriterData', jsonData);
     } catch (error) {
-        console.error("Error saving to local storage:" + error);
+      console.error("Error saving to local storage:" + error);
     }
-}
+  }
 
-saveToFile(fileName) {
+  saveToFile(fileName) {
     try {
-        const projectData = {
-            projectName: this.beatwriter.projectName,
-            beatTrack: this.beatwriter.beatTrack,
-            cells: this.beatwriter.cells.map(cell => ({
-                uniqueId: cell.uniqueId,
-                syllable: cell.syllable,
-                isCandidate: cell.isCandidate,
-                stepPlaying: cell.stepPlaying,
-                isPlayable: cell.isPlayable
-            })),
-            playParameterValues: this.beatwriter.playParameterValues.map(parameter => ({
-                name: parameter.name,
-                value: parameter.currentValue,
-                minValue: parameter.minValue,
-                maxValue: parameter.maxValue,
-                type: parameter.type
-            })),
-            beatTrackParameterValues: this.beatwriter.beatTrackParameterValues.map(parameter => ({
-                name: parameter.name,
-                value: parameter.currentValue,
-                minValue: parameter.minValue,
-                maxValue: parameter.maxValue,
-                type: parameter.type
-            }))
-        };
-        const jsonData = JSON.stringify(projectData);
-        this.downloadFile(fileName + ".json", jsonData); // Changed the file extension to .json
+      const projectData = {
+        projectName: this.beatwriter.projectName,
+        beatTrack: this.beatwriter.beatTrack,
+        cells: this.beatwriter.cells.map(cell => ({
+          uniqueId: cell.uniqueId,
+          syllable: cell.syllable,
+          isCandidate: cell.isCandidate,
+          stepPlaying: cell.stepPlaying,
+          isPlayable: cell.isPlayable
+        })),
+        playParameterValues: this.beatwriter.playParameterValues.map(parameter => ({
+          name: parameter.name,
+          value: parameter.currentValue,
+          minValue: parameter.minValue,
+          maxValue: parameter.maxValue,
+          type: parameter.type
+        })),
+        beatTrackParameterValues: this.beatwriter.beatTrackParameterValues.map(parameter => ({
+          name: parameter.name,
+          value: parameter.currentValue,
+          minValue: parameter.minValue,
+          maxValue: parameter.maxValue,
+          type: parameter.type
+        }))
+      };
+      const jsonData = JSON.stringify(projectData);
+      this.downloadFile(fileName + ".json", jsonData);
     } catch (error) {
-        console.error("Error saving to file:" + error);
+      console.error("Error saving to file:" + error);
     }
-}
+  }
 
   loadFromLocalStorage() {
     try {
@@ -142,7 +144,7 @@ saveToFile(fileName) {
     this.beatwriter.controlPanel.updateDisplays();
   }
 
- loadBeatTrack() {
+  loadBeatTrack() {
     return new Promise((resolve, reject) => {
       const fileInput = document.createElement('input');
       fileInput.type = 'file';
@@ -159,5 +161,17 @@ saveToFile(fileName) {
       };
       fileInput.click();
     });
+  }
+
+  startAutoSave(interval = 30000) {
+    this.autoSaveInterval = setInterval(() => {
+      this.saveToLocalStorage();
+    }, interval);
+  }
+
+  stopAutoSave() {
+    if (this.autoSaveInterval) {
+      clearInterval(this.autoSaveInterval);
+    }
   }
 }
