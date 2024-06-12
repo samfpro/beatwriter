@@ -62,6 +62,7 @@ const decodedData = await this.ac.decodeAudioData(buffer);
                 console.error('Error fetching or decoding audio file:', error);
             }
         })();
+        this.drawRegions();
     }
 
     drawRegions() {

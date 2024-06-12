@@ -83,6 +83,5 @@ window.onerror = function(message, source, lineno, colno, error) {
 
 const beatwriter = new Beatwriter();
 beatwriter.calculateMaxValues();
-beatwriter.controlPanel.playValueSelector.updateDisplay();
-beatwriter.controlPanel.beatTrackValueSelector.updateDisplay();
+beatwriter.controlPanel.updateDisplays();
 beatwriter.fileManager.start();

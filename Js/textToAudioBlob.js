@@ -52,6 +52,10 @@ if (textToConvert.toLowerCase() === "the"){
    textToConvert = "duh";
    console.log("changing the to duh");
 }
+if (textToConvert.toLowerCase() === "y"){
+   textToConvert = "ee";
+   console.log("changing y to ee");
+}
 
   const apiUrl = `https://texttospeech.googleapis.com/v1/text:synthesize?key=${apiKey}`;
 

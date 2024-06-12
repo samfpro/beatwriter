@@ -298,7 +298,6 @@ this.calculator.calculateBpm(this.beatwriter.beatTrack.fileUrl)
 this.beatwriter.waveFormView.drawWaveForm(this.beatwriter.beatTrack);
 
 
-
   }
   handleExportButtonClick() {
     console.log('Export button clicked'); // Add this line for debugging
